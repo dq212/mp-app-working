@@ -199,7 +199,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
     
     bikes = []
     
-    print("\(tempBikes[0].projects?.count) THIS IS THE COUNT FOR THE TEMP BIKES INSIDE RESTORE")
+//    print("\(tempBikes[0].projects?.count) THIS IS THE COUNT FOR THE TEMP BIKES INSIDE RESTORE")
     
     var unique_merged:[FB_Bike] = []
     // for projects
@@ -297,7 +297,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
             bikes.append(bike!)
             print(bikes.count)
             
-            print("\(tempBikes[0].projects?.count) TEMP Projects Count")
+//            print("\(tempBikes[0].projects?.count) TEMP Projects Count")
             
            let unique_backedup = bikes.filterDuplicates { $1.uniqueID == $0.uniqueID }
           // let unique_backedup = bikes

@@ -302,7 +302,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         //filter and keep non-selected items and reload
         projectImages = projectImages.filter({!$0.checked!})
         print("ALL THE IMAGES --- AFTER THE FILTER...\(projectImages)")
-        bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].imagesArray = projectImages
+//        bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].imagesArray = projectImages
         saveBikes()
         handleSelect()
         collectionView?.reloadData()
