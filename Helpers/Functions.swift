@@ -22,6 +22,9 @@ var unique_merged:[FB_Bike] = []
 var p:[FB_ProjectItem]?
 var t:[FB_MaintenanceItem]?
 
+var ub:DatabaseReference?
+
+
 
 
 var bikes:[FB_Bike] = []
@@ -199,6 +202,10 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
     
     bikes = []
     
+    DispatchQueue.global().sync {
+
+          print("DO THIS FIRST")
+ 
 //    print("\(tempBikes[0].projects?.count) THIS IS THE COUNT FOR THE TEMP BIKES INSIDE RESTORE")
     
     var unique_merged:[FB_Bike] = []
@@ -210,6 +217,10 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
     guard let uid = Auth.auth().currentUser?.uid else {return}
     let ref = Database.database().reference(fromURL: "https://motopreserve-ebd6b.firebaseio.com/")
     var userBikesRef = ref.child("users").child(uid).child("userBikes")
+        
+    ub = userBikesRef
+        
+    
     
     userBikesRef.queryOrdered(byChild: "uniqueID").observe(.childAdded, with: { (snapshot) in
         //.observeSingleEvent(of: .childAdded, with: { (snapshot) in
@@ -260,7 +271,9 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                             let i_name = (pv as AnyObject).object(forKey:"imageName") as? String
                             let i_timestamp = (pv as AnyObject).object(forKey:"timestamp") as? NSNumber
                             let i_uniqueID = (pv as AnyObject).object(forKey:"uniqueID") as? String
+                            print("how many damn images do I have? \(p_images)")
                             
+                          
                             let post = PostImage(imageName: i_name!, uniqueID: i_uniqueID, timestamp: i_timestamp, checked: i_checked)
                             projectImages.append(post!)
                         }
@@ -315,6 +328,11 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
             bikeTasks = []
         }
         
+        DispatchQueue.global().sync {
+            
+            ub!.removeAllObservers()
+            print("THEN DO THIS")
+        }
         
         print("\(unique_merged) this is the two arrays merged")
         
@@ -323,9 +341,16 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
     }) { (err) in
         print(err)
     }
-    userBikesRef.removeAllObservers()
+    }
+  
+ 
+    
+    //userBikesRef.removeAllObservers()
     
 }
+
+
+
 
 /////
 
@@ -347,8 +372,6 @@ func addProjectImages(project:FB_ProjectItem, bike:FB_Bike) {
         }
     }
 }
-
-
 
 
 
