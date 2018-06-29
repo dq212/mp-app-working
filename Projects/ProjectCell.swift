@@ -24,9 +24,7 @@ class ProjectCell: UITableViewCell {
 //        notesTextView.text = nil
 //        thumbImage.image = nil
 //    }
-    
   
-    
     let thumbNailImageView: CustomImageView = {
         let iv = CustomImageView()
         iv.backgroundColor = .white

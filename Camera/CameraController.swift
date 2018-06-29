@@ -17,6 +17,7 @@ protocol CameraControllerDelegate: class {
 class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
 
     var project:FB_ProjectItem?
+    var projects:[FB_ProjectItem]?
     var bike:FB_Bike?
     var bikes:[FB_Bike]?
     //var imagesCache:DataCache?
@@ -87,8 +88,11 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
         let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
         let previewImage = UIImage(data: imageData!)
         
+        
+        
         let containerView = PreviewPhotoContainerView()
         containerView.project = self.project
+        containerView.projects = self.projects
         containerView.bike = self.bike
         containerView.bikes = self.bikes
         //containerView.imagesCache = self.imagesCache

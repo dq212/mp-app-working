@@ -78,10 +78,12 @@ func checkConnectionForBackup(vc:UIViewController, bikes:[FB_Bike]?,  msg_string
                         }
                     } else if (msg == "Restore"){
                         if bikes != nil {
+                            
                            // doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
                         } else {
                             alert.dismiss(animated: true, completion: nil)
                         }
+                        let alert = UIAlertController(title: "Are you sure you're ready to RESTORE?", message: "You can cancel here and BACKUP unless you're recovering something you just deleted.", preferredStyle: .alert)
 //                        if let bikes = bikes {
 //                            doRestoreData(view: vc, tempBikes: bikes)
 //                        }
@@ -107,7 +109,9 @@ func checkConnectionForBackup(vc:UIViewController, bikes:[FB_Bike]?,  msg_string
                 else if  (msg == "Restore") {
                     if bikes != nil {
 //                    print("\(BikeData.sharedInstance.allBikes[0].projects?.count) COUNTING PROJECTS THAT EXIST LOCALLY - restore")
-                    doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
+                        
+                        // put popup here
+                   // doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
                     print("we are connected, so do restore")
                     }
                 }
@@ -159,7 +163,9 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                 })
                 
                 if (project.imagesArray != nil ) {
+                    
                     for image in project.imagesArray! {
+                        print("number of images in the array \(project.imagesArray?.count)")
                         let iRef = projectRef.child("images").child(image.uniqueID!)
                         let values = ["uniqueID":image.uniqueID as Any, "imageName":image.imageName ,"checked":image.checked as Any, "timestamp":image.timestamp as Any] as [String : Any]
                         iRef.updateChildValues(values as Any as! [AnyHashable : Any], withCompletionBlock: { (error, ref) in
@@ -202,7 +208,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
     
     bikes = []
     
-    DispatchQueue.global().sync {
+    DispatchQueue.main.async {
 
           print("DO THIS FIRST")
  
@@ -262,6 +268,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                     
                     print("PROJECTS \(projects?.count)")
                     print("TASKS \(maintenanceTasks?.count)")
+                    print("IMAGES \(projectImages.count)")
                     
                     if p_images != nil {
                                                     print("\(p_images?.count) the dictionary of images")
@@ -271,7 +278,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                             let i_name = (pv as AnyObject).object(forKey:"imageName") as? String
                             let i_timestamp = (pv as AnyObject).object(forKey:"timestamp") as? NSNumber
                             let i_uniqueID = (pv as AnyObject).object(forKey:"uniqueID") as? String
-                            print("how many damn images do I have? \(p_images)")
+                            print("how many damn images do I have? \(p_images?.count)")
                             
                           
                             let post = PostImage(imageName: i_name!, uniqueID: i_uniqueID, timestamp: i_timestamp, checked: i_checked)
@@ -328,22 +335,22 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
             bikeTasks = []
         }
         
-        DispatchQueue.global().sync {
+        DispatchQueue.main.async {
             
             ub!.removeAllObservers()
+            saveRestoredItems(vc:vc,bikes:unique_merged)
             print("THEN DO THIS")
         }
         
         print("\(unique_merged) this is the two arrays merged")
         
         //        print("\(bikeCount) is the bike count")
-        saveRestoredItems(vc:vc,bikes:unique_merged)
+        
     }) { (err) in
         print(err)
     }
     }
   
- 
     
     //userBikesRef.removeAllObservers()
     

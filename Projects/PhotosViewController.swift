@@ -862,6 +862,7 @@ extension PhotosViewController: UIImagePickerControllerDelegate {
         let cameraController = CameraController()
             cameraController.project = self.project
             cameraController.delegate = self
+            cameraController.projects = self.projects
             cameraController.bike = self.bike
             cameraController.bikes = self.bikes
             cameraController.projectIndexPath = self.projectIndexPath
@@ -893,7 +894,6 @@ extension PhotosViewController: UIImagePickerControllerDelegate {
         }
         picker.dismiss(animated: true, completion: nil)
     }
-    
     
     ////This saves to the phone photo library in the "MotoPreserve" album
     func saveImageToAlbum(image:UIImage, view:UIView, isCameraView:Bool = false) -> Void {

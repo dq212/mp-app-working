@@ -14,6 +14,7 @@ class PreviewPhotoContainerView: UIView {
     
     var project:FB_ProjectItem?
     var bike:FB_Bike?
+    var projects:[FB_ProjectItem]?
     var bikes:[FB_Bike]?
     var tempImageName:String?
     
@@ -58,15 +59,31 @@ class PreviewPhotoContainerView: UIView {
     @objc func handleCancel() {
         self.removeFromSuperview()
     }
+//    func saveBikes() {
+//        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(bikes as Any, toFile: FB_Bike.ArchiveURL.path)
+//        if isSuccessfulSave {
+//            print("successfully saved")
+//            //os_log("Meals successfully saved.", log: OSLog.default, type: .debug)
+//        } else {
+//            print("un-successfully saved")
+//            // os_log("Failed to save meals...", log: OSLog.default, type: .error)
+//        }
+//    }
+    
     func saveBikes() {
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(bikes as Any, toFile: FB_Bike.ArchiveURL.path)
+        
+       // project.imagesArray = projectImages
+        //  bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = project
+        //   bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike
+        
+        BikeData.sharedInstance.allBikes = self.bikes!
+        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(bikes, toFile: FB_Bike.ArchiveURL.path)
         if isSuccessfulSave {
             print("successfully saved")
-            //os_log("Meals successfully saved.", log: OSLog.default, type: .debug)
         } else {
             print("un-successfully saved")
-            // os_log("Failed to save meals...", log: OSLog.default, type: .error)
         }
+        
     }
     
     func updateBikes() {
@@ -84,25 +101,47 @@ class PreviewPhotoContainerView: UIView {
         return NSKeyedUnarchiver.unarchiveObject(withFile: FB_Bike.ArchiveURL.path) as? [FB_Bike]
     }
     
-    func saveLocalImageToProjetImagesArray(name:String, item:FB_ProjectItem) {
-        //guard let image = selectedImage else {return}
-        //set the value here
-        //projectImages = []
-        //var dictionary = ["imageName":name]
-        print(name)
+//    func saveLocalImageToProjectImagesArray(name:String, item:FB_ProjectItem) {
+//        //guard let image = selectedImage else {return}
+//        //set the value here
+//        //projectImages = []
+//        //var dictionary = ["imageName":name]
+//        print(name)
+//        let timestamp:NSNumber = NSDate().timeIntervalSince1970 as NSNumber
+//        let post = PostImage(imageName: self.tempImageName! , uniqueID: item.uniqueID, timestamp:timestamp, checked: false)
+//        print(item.imagesArray?.count)
+//        item.imagesArray?.append(post!)
+//        print(item.imagesArray?.count)
+//        //projectImages = item.imagesArray!
+//
+//        self.project = item
+//        print("GIMME THE COUNT OF THE NEWEST PHOTOS")
+//        print( "\( bikes?[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].imagesArray?.count)")
+//        bikes?[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].imagesArray = item.imagesArray
+//        print( "\( bikes?[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].imagesArray?.count)")
+//
+//       // bikes?[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike!
+//
+//        //saveBikes()
+//        updateBikes()
+//
+//    }
+    
+    func saveLocalImageToProjectImagesArray(name:String, item:FB_ProjectItem) {
+        let id = NSUUID().uuidString
         let timestamp:NSNumber = NSDate().timeIntervalSince1970 as NSNumber
-        let post = PostImage(imageName: name, uniqueID: item.uniqueID, timestamp:timestamp, checked: false)
+        let post = PostImage(imageName: name, uniqueID: id, timestamp:timestamp, checked: false)
         item.imagesArray?.append(post!)
-        //projectImages = item.imagesArray!
-        
+       // projectImages = item.imagesArray!
         self.project = item
-       // bikes?[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = item
-        
-        bikes?[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike!
-        
-        //saveBikes()
-       // updateBikes()
-   
+        print("\(projectIndexPath) Project Index Path from save local")
+        updateBikes()
+        // print(item == bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!])
+        //   bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = item
+        //  bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike
+        print("\(item.imagesArray?.count) = count of images before save")
+        saveBikes()
+        //updateBikes()
     }
     
     @objc func handleSave() {
@@ -127,7 +166,7 @@ class PreviewPhotoContainerView: UIView {
         helper.saveImageAsAsset(image: image, completion: { (localIdentifier) -> Void in
             imageIdentifier = localIdentifier
             self.tempImageName = imageIdentifier
-            self.saveLocalImageToProjetImagesArray(name:imageIdentifier! , item: self.project!)
+            self.saveLocalImageToProjectImagesArray(name:imageIdentifier! , item: self.project!)
         })
         
         self.removeFromSuperview()
