@@ -90,8 +90,9 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cmBg:UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor.veryLightGray()
-            view.layer.cornerRadius = 20
+            view.backgroundColor = .white
+           // view.layer.cornerRadius = 20
+           //view.backgroundColor = UIColor(white: 1, alpha: 0.8)
             return view
         }()
         
@@ -130,11 +131,11 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         
-        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 10, paddingBottom: 10, paddingRight: 10, width: 0, height: 395)
+        cmBg.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         cm.addSubview(cmEmailButton)
         
-        cmBg.dropShadow()
+       // cmBg.dropShadow()
         
         cmEmailButton.anchor(top: cm.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 25, paddingRight: 0, width: 100, height: 0)
         cmEmailButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

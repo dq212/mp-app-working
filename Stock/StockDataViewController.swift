@@ -17,6 +17,8 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
     var valueArray = [String]()
     var stockData = [String]()
     
+    
+    
     var cellId = "cellId"
     
     var tableView:UITableView = UITableView()
@@ -29,15 +31,15 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
         
         guard let bike = bike else { return }
         super.viewWillAppear(animated)
-        
-        if (bike.year != nil && bike.year != "Unknown" && bike.year != "No Year Selected") {
-            getData(mk:bike.make!, mdl:bike.model!, yr:bike.year!)
-        } else {
-            print("Now show something else")
-            let noDataController = NoDataViewController()
-            self.navigationController?.pushViewController(noDataController, animated: false)
-            //let navController = UINavigationController(rootViewController: noDataController)
-        }
+        checkData()
+//        if (bike.year != nil && bike.year != "Unknown" && bike.year != "No Year Selected") {
+//            getData(mk:bike.make!, mdl:bike.model!, yr:bike.year!)
+//        } else {
+//            print("Now show something else")
+//            let noDataController = NoDataViewController()
+//            self.navigationController?.pushViewController(noDataController, animated: false)
+//            //let navController = UINavigationController(rootViewController: noDataController)
+//        }
     }
     
     
@@ -53,6 +55,8 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.dataSource = self
         view.addSubview(tableView)
         
+        
+        
         titleBar.addTitleBarAndLabel(page: view, initialTitle: "STOCK DATA", ypos: 64)
         //let titleBar = addTitleBarAndLabel(page: view, title: "Projects", ypos: 64)
         tableView.anchor(top: view.topAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 100, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
@@ -67,12 +71,53 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
 //            //let navController = UINavigationController(rootViewController: noDataController)
 //            self.present(noDataController, animated:true, completion:nil)
 //        }
+       
+        
+        checkDisclaimer()
     }
     
 //    func cancelThisView(_ sender: UIBarButtonItem) {
 //        self.navigationController?.popViewController(animated: true)
 //        dismiss(animated: true, completion: nil)
 //    }
+    
+    func checkData() {
+        guard let bike = bike else { return }
+        if (bike.year != nil && bike.year != "Unknown" && bike.year != "No Year Selected") {
+            getData(mk:bike.make!, mdl:bike.model!, yr:bike.year!)
+        } else {
+            print("Now show something else")
+            let noDataController = NoDataViewController()
+            self.navigationController?.pushViewController(noDataController, animated: false)
+            //let navController = UINavigationController(rootViewController: noDataController)
+        }
+    }
+    
+    func checkDisclaimer() {
+        // put popup here
+        if (UserDefaults.standard.bool(forKey: "hasAgreedToStockData") == false) {
+        let alert = UIAlertController(title: "Disclaimer.", message: "STOCK DATA has been compiled from a variety of historic references. While we do our best to provide the most accurate information available, any and all changes to your bike should be cross-referenced with a manufacturer's owner or shop manual.", preferredStyle: .alert)
+        //alert.view.tintColor = UIColor.mainRed()
+        alert.addAction(UIAlertAction(title: "I agree and understand.", style: .destructive, handler: {(alertAction) in
+            UserDefaults.standard.set(true, forKey: "hasAgreedToStockData")
+            self.checkData()
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        alert.view.tintColor = UIColor.black
+        alert.addAction(UIAlertAction(title: "I'll do my own research.", style: .default, handler: {(alertAction) in
+            //alert.dismiss(animated: true, completion: nil)
+            self.checkDisclaimer()
+        }))
+        
+        self.present(alert, animated: true, completion:nil)
+            
+        } else {
+            return
+        }
+        
+        // doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
+      
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 30

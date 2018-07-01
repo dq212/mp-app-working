@@ -94,8 +94,8 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let cmBg:UIView = {
             let view = UIView()
-            view.backgroundColor = UIColor.veryLightGray()
-            view.layer.cornerRadius = 20
+            view.backgroundColor = UIColor.white
+           // view.layer.cornerRadius = 20
             return view
         }()
         
@@ -128,7 +128,7 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
-        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 10, paddingBottom: 10, paddingRight: 10, width: 0, height: 420)
+        cmBg.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 90, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         cmBg.dropShadow()
         
         self.coachMark = cm

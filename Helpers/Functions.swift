@@ -78,12 +78,10 @@ func checkConnectionForBackup(vc:UIViewController, bikes:[FB_Bike]?,  msg_string
                         }
                     } else if (msg == "Restore"){
                         if bikes != nil {
-                            
                            // doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
                         } else {
                             alert.dismiss(animated: true, completion: nil)
                         }
-                        let alert = UIAlertController(title: "Are you sure you're ready to RESTORE?", message: "You can cancel here and BACKUP unless you're recovering something you just deleted.", preferredStyle: .alert)
 //                        if let bikes = bikes {
 //                            doRestoreData(view: vc, tempBikes: bikes)
 //                        }
@@ -110,7 +108,23 @@ func checkConnectionForBackup(vc:UIViewController, bikes:[FB_Bike]?,  msg_string
                     if bikes != nil {
 //                    print("\(BikeData.sharedInstance.allBikes[0].projects?.count) COUNTING PROJECTS THAT EXIST LOCALLY - restore")
                         
-                        // put popup here
+                // put popup here
+                        let alert = UIAlertController(title: "Are you sure you want to RESTORE?", message: "Restoring is good if you just accidentally deleted something you've backed up. But Restoring will wipe any NEW work you have. You can hit 'Cancel' and the do a Backup first.", preferredStyle: .alert)
+                        //alert.view.tintColor = UIColor.mainRed()
+                        alert.addAction(UIAlertAction(title: "All good, let's Restore", style: .destructive, handler: {(alertAction) in
+                           
+                            doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
+                            alert.dismiss(animated: true, completion: nil)
+                            
+                            
+                        }))
+                         alert.view.tintColor = UIColor.black
+                        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: {(alertAction) in
+                            alert.dismiss(animated: true, completion: nil)
+                        }))
+                        
+                        vc.present(alert, animated: true, completion:nil)
+                        
                    // doRestoreData(view: vc, tempBikes: BikeData.sharedInstance.allBikes)
                     print("we are connected, so do restore")
                     }
