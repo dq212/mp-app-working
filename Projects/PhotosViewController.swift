@@ -600,9 +600,11 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     
     func handleShare() {
-        let size:CGSize = CGSize(width: 2048.0, height: 2048.0)
+       // let size:CGSize = CGSize(width: 1024, height: 2048.0)
         let imagesArray = NSMutableArray()
         var stringArray:[String] = []
+        let option = PHImageRequestOptions()
+
         let imgManager = PHImageManager.default()
         if (selectedImagesArray.count > 0) {
             let alert = UIAlertController(title: "Share Image(s)", message: "Are you ready to share?", preferredStyle: .alert)
@@ -619,14 +621,32 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
                     print("\(self.selectedImagesArray[i].imageName) name from selected images")
                 }
                 print(stringArray)
+                
+                    let manager = PHImageManager.default()
+                    let option = PHImageRequestOptions()
+                    var thumbnail = UIImage()
+                    option.isSynchronous = true
                 if let fetchResult: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: stringArray, options: nil) {
-                 if fetchResult.count > 0 {
-                        print(stringArray)
-                        for j in 0..<stringArray.count {
-                            imgManager.requestImage(for: fetchResult.object(at: j) as PHAsset, targetSize: size, contentMode: .aspectFill, options: nil, resultHandler: { (image, _) in
-                                imagesArray.add(image as Any)
-                            })
-                        }
+                if fetchResult.count > 0 {
+                 for j in 0..<stringArray.count {
+                    manager.requestImage(for: fetchResult.object(at: j), targetSize:CGSize(width: fetchResult.object(at: j).pixelWidth, height: fetchResult.object(at: j).pixelHeight), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                       // thumbnail = result!
+                         imagesArray.add(result as Any)
+                    })
+                    
+                }
+              
+//                if let fetchResult: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: stringArray, options: nil) {
+//                 if fetchResult.count > 0 {
+//                        print(stringArray)
+//                        for j in 0..<stringArray.count {
+//                            imgManager.requestImage(for: fetchResult.object(at: j) as PHAsset, targetSize:CGSize(width: fetchResult.object(at: j).pixelWidth, height: fetchResult.object(at: j).pixelHeight), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+//                                imagesArray.add(result as Any)
+//                                print(fetchResult.object(at: j).pixelWidth)
+//                                print(fetchResult.object(at: j).pixelHeight)
+//
+//                            })
+//                        }
                     }
                 }
                 let activityController = UIActivityViewController(activityItems:imagesArray as! [Any] , applicationActivities: nil)

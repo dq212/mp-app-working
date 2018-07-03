@@ -112,6 +112,7 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let cmImg:UIImageView = {
             let iv = UIImageView(image:#imageLiteral(resourceName: "cm_projects"))
+            iv.contentMode = .scaleAspectFit
             return iv
             
         }()

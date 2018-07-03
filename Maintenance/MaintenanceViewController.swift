@@ -164,6 +164,7 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         
         let cmImg:UIImageView = {
             let iv = UIImageView(image:#imageLiteral(resourceName: "cm_maintenance"))
+            iv.contentMode = .scaleAspectFit
             return iv
             
         }()

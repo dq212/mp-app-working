@@ -98,6 +98,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cmImg:UIImageView = {
             let iv = UIImageView(image:#imageLiteral(resourceName: "cm_bikes"))
+            iv.contentMode = .scaleAspectFit
             return iv
             
         }()

@@ -32,7 +32,13 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
     
     var videos = [FB_Video]()
     
-     var isConnected:Bool?  
+     var isConnected:Bool?
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super .viewWillDisappear(true)
+        keyArray = []
+        valueArray = []
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(true)

@@ -25,6 +25,14 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var titleBar:TitleBar = TitleBar()
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super .viewWillDisappear(true)
+        stockData = []
+        keyArray = []
+        valueArray = []
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         stockData = []
         keyArray = []
