@@ -738,7 +738,7 @@ extension AddProjectViewController: UIImagePickerControllerDelegate  {
 
         if let theImage = selectedImageFromPicker {
             showImage(image: theImage)
-            let _:NSData = UIImageJPEGRepresentation(theImage, 0.7)! as NSData
+            let _:NSData = UIImageJPEGRepresentation(theImage, 1)! as NSData
             showImage(image: theImage)
             saveProjectImageToAlbum(image: theImage, view: self.view)
         }

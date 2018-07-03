@@ -26,7 +26,9 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
     var titleBar:TitleBar = TitleBar()
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        stockData = []
+        keyArray = []
+        valueArray = []
         self.bike = BikeData.sharedInstance.bike!
         
         guard let bike = bike else { return }
@@ -46,7 +48,9 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        stockData = []
+        keyArray = []
+        valueArray = []
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo_2"))
         
         tableView = UITableView()

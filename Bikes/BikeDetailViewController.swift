@@ -920,7 +920,7 @@ extension BikeDetailViewController: UIImagePickerControllerDelegate, UINavigatio
         }
         if let theImage = selectedImageFromPicker {
             
-        let _:NSData = UIImageJPEGRepresentation(theImage, 0.7) as! NSData
+        let _:NSData = UIImageJPEGRepresentation(theImage, 1) as! NSData
          // showImage(image: theImage)
         saveImageToAlbum(image: theImage, view: self.view)
             //showImage(image: theImage)

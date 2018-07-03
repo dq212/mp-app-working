@@ -600,7 +600,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     
     func handleShare() {
-        let size:CGSize = CGSize(width: 1024.0, height: 1024.0)
+        let size:CGSize = CGSize(width: 2048.0, height: 2048.0)
         let imagesArray = NSMutableArray()
         var stringArray:[String] = []
         let imgManager = PHImageManager.default()
@@ -615,6 +615,8 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
             alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: {(alertAction) in
                 for i in 0..<self.selectedImagesArray.count {
                     stringArray.append(self.selectedImagesArray[i].imageName)
+                    print("\(self.project.imagesArray![i].imageName) name from projects")
+                    print("\(self.selectedImagesArray[i].imageName) name from selected images")
                 }
                 print(stringArray)
                 if let fetchResult: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: stringArray, options: nil) {
@@ -630,6 +632,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let activityController = UIActivityViewController(activityItems:imagesArray as! [Any] , applicationActivities: nil)
                 self.present(activityController, animated: true, completion: nil)
                 self.selectedImagesArray = []
+                self.resetSelections()
             }))
            
             self.present(alert, animated: true, completion:nil)
@@ -639,6 +642,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
              alert.view.tintColor = UIColor.mainRed()
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {(alertAction) in
                 alert.dismiss(animated: true, completion: nil)
+               // self.resetSelections()
             }))
             self.present(alert, animated: true, completion:nil)
         }

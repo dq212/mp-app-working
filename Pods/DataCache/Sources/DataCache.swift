@@ -148,7 +148,7 @@ extension DataCache {
             data = UIImagePNGRepresentation(image)
         }
         else {
-            data = UIImageJPEGRepresentation(image, 0.9)
+            data = UIImageJPEGRepresentation(image, 1)
         }
         
         if let data = data {
