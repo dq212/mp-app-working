@@ -23,7 +23,7 @@ protocol BikeDetailViewControllerDelegate: class {
     func bikeDetailViewController(_ controller: BikeDetailViewController, didFinishEditing bike: FB_Bike)
 }
 
-class BikeDetailViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource,
+class BikeDetailViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UIScrollViewDelegate,
 UITextFieldDelegate{
 
     var doneBarButton: UIBarButtonItem?
@@ -113,6 +113,13 @@ UITextFieldDelegate{
     }
     
     
+    let scrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
+    
     
     func showThumb(imageName: String, bike:FB_Bike) {
 
@@ -131,6 +138,11 @@ UITextFieldDelegate{
         }
         imageView.isHidden = false
     }
+    
+    var svContentView:UIView = {
+        let v = UIView()
+        return v
+    }()
     
     let topDividerView: UIView = {
         let view = UIView()
@@ -267,6 +279,9 @@ UITextFieldDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         drawDottedLines()
+        
+           // scrollView.contentSize = CGSize(width: self.view.bounds.width , height: 2000)
+        scrollView.isUserInteractionEnabled = true
         milesHoursSegmentedControl.addTarget(self, action: #selector(toggleMilesHours), for: .valueChanged)
         let toolBar = UIToolbar()
         let barDoneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneClicked))
@@ -277,8 +292,10 @@ UITextFieldDelegate{
         toolBar.sizeToFit()
         
         checkPermission()
+        view.addSubview(scrollView)
+        scrollView.addSubview(svContentView)
         view.backgroundColor = .white
-        view.addSubview(pickerView)
+        svContentView.addSubview(pickerView)
         UIBarButtonItem.appearance().setTitleTextAttributes([ NSAttributedStringKey.font: UIFont(name: "Avenir-Medium", size: 18)!], for: UIControlState.normal)
         UIBarButtonItem.appearance().setTitleTextAttributes([ NSAttributedStringKey.font: UIFont(name: "Avenir-Medium", size: 18)!], for: UIControlState.selected)
 
@@ -287,24 +304,25 @@ UITextFieldDelegate{
         stackView?.distribution = .fillEqually
         stackView?.axis = .vertical
         stackView?.distribution = UIStackViewDistribution(rawValue: Int(1.0))!
-        view.addSubview(stackView!)
+        svContentView.addSubview(stackView!)
         
-        view.addSubview(self.selectLabel)
+        svContentView.addSubview(self.selectLabel)
         //view.addSubview(self.middleDividerView)
-        view.addSubview(self.thumbnailLabel)
-        view.addSubview(self.imageView)
+        svContentView.addSubview(self.thumbnailLabel)
+        svContentView.addSubview(self.imageView)
         
-        view.addSubview(dottedLineView1)
-        view.addSubview(dottedLineView2)
-        view.addSubview(self.currentMileageLabel)
-        view.addSubview(milesHoursSegmentedControl)
-        view.addSubview(hoursMilesLabel)
-        view.addSubview(mileageTextField)
+        svContentView.addSubview(dottedLineView1)
+        svContentView.addSubview(dottedLineView2)
+        svContentView.addSubview(self.currentMileageLabel)
+        svContentView.addSubview(milesHoursSegmentedControl)
+        svContentView.addSubview(hoursMilesLabel)
+        svContentView.addSubview(mileageTextField)
         
         pickerView.dataSource = self
         pickerView.delegate = self
+        scrollView.delegate = self
         
-        view.addSubview(cameraButton)
+        svContentView.addSubview(cameraButton)
         
         mileageTextField.inputAccessoryView = toolBar
         mileageTextField.delegate = self
@@ -325,32 +343,35 @@ UITextFieldDelegate{
         doneBarButton?.tintColor = .mainRed();
         cancelBarButton?.tintColor = .mainRed()
         
-        stackView?.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 100, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 30)
+       
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+         svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
+        stackView?.anchor(top: svContentView.topAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 35, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 30)
 
-        self.selectLabel.anchor(top: stackView?.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 20, paddingBottom: 0, paddingRight:20, width: 0, height: 0)
+        self.selectLabel.anchor(top: stackView?.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight:20, width: 0, height: 0)
         self.selectLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
-        self.pickerView.anchor(top: selectLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 120)
+        self.pickerView.anchor(top: selectLabel.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 120)
         //self.middleDividerView.anchor(top: pickerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.5)
         //
-        self.dottedLineView1.anchor(top: pickerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
+        self.dottedLineView1.anchor(top: pickerView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
-        self.milesHoursSegmentedControl.anchor(top: dottedLineView1.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        self.milesHoursSegmentedControl.anchor(top: dottedLineView1.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         
-        self.currentMileageLabel.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop:15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        self.currentMileageLabel.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: nil, paddingTop:15, paddingLeft: 15, paddingBottom: 0, paddingRight: 10, width: 0, height: 30)
         
-        self.mileageTextField.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 200, height: 25 )
+        self.mileageTextField.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 160, height: 25 )
         
-        self.dottedLineView2.anchor(top: mileageTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
+        self.dottedLineView2.anchor(top: mileageTextField.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
         //
-        self.thumbnailLabel.anchor(top: dottedLineView2.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        self.thumbnailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.thumbnailLabel.anchor(top: dottedLineView2.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        self.thumbnailLabel.centerXAnchor.constraint(equalTo: svContentView.centerXAnchor).isActive = true
 
-        self.cameraButton.anchor(top: thumbnailLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        self.cameraButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.cameraButton.anchor(top: thumbnailLabel.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        self.cameraButton.centerXAnchor.constraint(equalTo: svContentView.centerXAnchor).isActive = true
         imageView.anchor(top: self.cameraButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: view.frame.width/3, height: view.frame.width/3)
-        self.cameraButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.cameraButton.centerXAnchor.constraint(equalTo: svContentView.centerXAnchor).isActive = true
         
         let imageWidth = (view.frame.width)/3
         imageView.layer.cornerRadius = (imageWidth)/2
@@ -358,7 +379,7 @@ UITextFieldDelegate{
         imageView.layer.borderColor = borderColor.cgColor
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: svContentView.centerXAnchor).isActive = true
         
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo_2"))
         
@@ -584,24 +605,25 @@ UITextFieldDelegate{
     
     func getYearForModel(mk: String, mdl:String) {
         if isConnected == true {
-        ref?.child("bikes").child(mk).child(mdl).queryOrderedByKey().observeSingleEvent(of: .value, with: {
-            (snapshot) in
-            guard let dictionary = snapshot.value as? NSDictionary else {return}
-            //print(dictionary)
-            let sortedKeys = (dictionary.allKeys as! [String]).sorted(by: <)
-            self.yearArray = sortedKeys
-           
-            self.pickerDataSource = [self.makeArray, self.modelArray, self.yearArray]
-            self.pickerView.reloadComponent(2)
-            if self.bikeYear == "No Year Selected" {
-            self.bikeYear = self.yearArray[0]
-            self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
-            } else {
-                
-                self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
-            }
-             self.makeModelYearCache?.write(object: self.yearArray as NSCoding, forKey: "years")
-        })
+            ref?.child("bikes").child(mk).child(mdl).queryOrderedByKey().observe(.value, with: { (snapshot) in
+
+                // ref?.child("bikes").child(mk).child(mdl).queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let dictionary = snapshot.value as? NSDictionary else {return}
+                //print(dictionary)
+                let sortedKeys = (dictionary.allKeys as! [String]).sorted(by: <)
+                self.yearArray = sortedKeys
+
+                self.pickerDataSource = [self.makeArray, self.modelArray, self.yearArray]
+                self.pickerView.reloadComponent(2)
+                if self.bikeYear == "No Year Selected" {
+                    self.bikeYear = self.yearArray[0]
+                    self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
+                } else {
+
+                    self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
+                }
+                self.makeModelYearCache?.write(object: self.yearArray as NSCoding, forKey: "years")
+            }, withCancel: nil)
         } else {
             print("we have no connection, now we need to parse the json object for the year")
             self.yearArray = self.makeModelYearCache?.readObject(forKey: "years") as! [String]
@@ -614,10 +636,45 @@ UITextFieldDelegate{
         }
     }
 
+//
+//    func getYearForModel(mk: String, mdl:String) {
+//        if isConnected == true {
+//
+//        ref?.child("bikes").child(mk).child(mdl).queryOrderedByKey().observeSingleEvent(of: .value, with: {
+//            (snapshot) in
+//            guard let dictionary = snapshot.value as? NSDictionary else {return}
+//            //print(dictionary)
+//            let sortedKeys = (dictionary.allKeys as! [String]).sorted(by: <)
+//            self.yearArray = sortedKeys
+//
+//            self.pickerDataSource = [self.makeArray, self.modelArray, self.yearArray]
+//            self.pickerView.reloadComponent(2)
+//            if self.bikeYear == "No Year Selected" {
+//            self.bikeYear = self.yearArray[0]
+//            self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
+//            } else {
+//
+//                self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
+//            }
+//             self.makeModelYearCache?.write(object: self.yearArray as NSCoding, forKey: "years")
+//        })
+//        } else {
+//            print("we have no connection, now we need to parse the json object for the year")
+//            self.yearArray = self.makeModelYearCache?.readObject(forKey: "years") as! [String]
+//            self.pickerDataSource = [self.makeArray, self.modelArray, self.yearArray]
+//            self.pickerView.reloadComponent(2)
+//            self.bikeYear = self.yearArray[0]
+//            if (self.bikeYear != self.yearArray[0]) {
+//                self.pickerView.selectRow(self.yearArray.index(of:self.bikeYear)!, inComponent: 2, animated: true)
+//            }
+//        }
+//    }
+
     func getModelsForMake(mk:String) {
         if isConnected == true {
-        ref?.child("bikes").child(mk).queryOrderedByKey().observeSingleEvent(of: .value, with: {
-            (snapshot) in
+       // ref?.child("bikes").child(mk).queryOrderedByKey().observeSingleEvent(of: .value, with: {
+           ref?.child("bikes").child(mk).queryOrderedByKey().observe(.value, with: { (snapshot) in
+           // (snapshot) in
             guard let dictionary = snapshot.value as? NSDictionary else {return}
             //print(dictionary)
             let sortedKeys = (dictionary.allKeys as! [String]).sorted(by: <)
@@ -633,7 +690,7 @@ UITextFieldDelegate{
             }
             self.makeModelYearCache?.write(object: self.modelArray as NSCoding, forKey: "models")
             self.getYearForModel(mk: self.makeName, mdl: self.modelName)
-        })
+           }, withCancel: nil)
         } else {
             print("we have no connection, now we need to parse the json for the models")
             self.modelArray = self.makeModelYearCache?.readObject(forKey: "models") as! [String]
@@ -653,8 +710,9 @@ UITextFieldDelegate{
             self.modelArray = [" "]
             self.yearArray = [" "]
             ref = Database.database().reference()
-            ref?.child("make").queryOrderedByKey().observeSingleEvent(of: .value, with: {
-            (snapshot) in
+           // ref?.child("make").queryOrderedByKey().observeSingleEvent(of: .value, with: {
+           ref?.child("make").queryOrderedByKey().observe(.value, with: { (snapshot) in
+           // (snapshot) in
                 
            guard let mk = snapshot.value as? NSArray else {return}
            for i in 0..<mk.count {
@@ -672,7 +730,7 @@ UITextFieldDelegate{
                 }
                 self.pickerView.selectRow(self.makeArray.index(of:self.makeName)!, inComponent: 0, animated: true)
             }
-        })
+        }, withCancel: nil)
         } else {
             print("we have no connection, now we need to parse the json for the makes")
             self.makeArray = [" "]

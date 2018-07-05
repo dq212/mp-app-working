@@ -58,7 +58,7 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.register(TutorialListCell.self, forCellReuseIdentifier: cellId)
         view.addSubview(tableView)
-        tableView.backgroundColor = .black
+        tableView.backgroundColor = UIColor.tableViewBgGray()
         
         tableView.anchor(top: view.topAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 89, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         

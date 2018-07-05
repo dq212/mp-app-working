@@ -58,7 +58,7 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
     
         self.selectedIndexPath = BikeData.sharedInstance.selectedIndexPath
         print("\(String(describing: BikeData.sharedInstance.bike)) this is an actual value")
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.tableViewBgGray()
         
         guard let bike = bike else { return }
         
@@ -70,7 +70,7 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.dataSource = self
 //        tableView.backgroundColor = UIColor.tableViewBgGray()
 //        tableView.backgroundColor = UIColor.nearlyBlack()
-        tableView.backgroundColor = .gray
+        tableView.backgroundColor = UIColor.tableViewBgGray()
         
         view.addSubview(tableView)
         
@@ -95,9 +95,13 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         let cmBg:UIView = {
             let view = UIView()
             view.backgroundColor = UIColor.white
-           // view.layer.cornerRadius = 20
+            view.layer.borderColor = UIColor.mainRed().cgColor
+            view.layer.borderWidth = 2.0
+            view.layer.cornerRadius = 10
             return view
         }()
+        
+        
         
 //        let cmText:UITextView = {
 //            let tv = UITextView()
@@ -129,7 +133,7 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
-        cmBg.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 90, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 90, paddingRight: 10, width: 0, height: 0)
         cmBg.dropShadow()
         
         self.coachMark = cm

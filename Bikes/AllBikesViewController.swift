@@ -65,7 +65,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddBike))
         
         //Mark: load any user bikes
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.tableViewBgGray()
 
         tableView = UITableView()
         tableView.separatorStyle = .none
@@ -90,11 +90,13 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cmBg:UIView = {
             let view = UIView()
-            view.backgroundColor = .white
-           // view.layer.cornerRadius = 20
-           //view.backgroundColor = UIColor(white: 1, alpha: 0.8)
+            view.backgroundColor = UIColor.white
+            view.layer.borderWidth = 2.0
+            view.layer.borderColor =   UIColor.mainRed().cgColor
+            view.layer.cornerRadius = 10
             return view
         }()
+        
         
         let cmImg:UIImageView = {
             let iv = UIImageView(image:#imageLiteral(resourceName: "cm_bikes"))
@@ -132,7 +134,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         
-        cmBg.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 190, paddingRight: 10, width: 0, height: 0)
         
         cm.addSubview(cmEmailButton)
         
@@ -208,10 +210,11 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
             view.addSubview(videoView)
             videoView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
             
-            let videoString = Bundle.main.path(forResource: "MP_intro_1", ofType: ".mp4")
+            let videoString = Bundle.main.path(forResource: "MP_intro_2", ofType: ".mp4")
             if let url = videoString {
                 let videoUrl = NSURL(fileURLWithPath: url)
                 self.player = AVPlayer(url: videoUrl as URL)
+            
                 self.playerController.player = self.player
             }
             
@@ -468,7 +471,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             let name = self.bikes[indexPath.row].name!
-            let deleteMsg = "Are you sure you want \nto delete this bike \n You cannot undo this action."
+            let deleteMsg = "Are you sure you want \nto delete this bike? \n You cannot undo this action."
             let alert = UIAlertController(title: "Delete \(name)?", message: deleteMsg, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive, handler: { action in
                 self.deleteBike(indexPath: indexPath)

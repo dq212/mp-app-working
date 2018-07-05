@@ -105,7 +105,7 @@ class BikeCell: UITableViewCell {
         addSubview(unitsLabel)
         
        // addSubview(divider2)
-        thumbNailImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 10, paddingRight: 0, width: (frame.width / 3) , height: (frame.width / 3) )
+        thumbNailImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 15, paddingBottom: 10, paddingRight: 0, width: (frame.width / 3.5) , height: (frame.width / 3.5) )
         
         setupLabels()
         
@@ -113,10 +113,10 @@ class BikeCell: UITableViewCell {
         //divider2.anchor(top: divider.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.5)
         
         unitsLabel.anchor(top: titleLabel.topAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 20)
-        mileageButton.anchor(top: unitsLabel.bottomAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 7, paddingLeft: 0, paddingBottom: 0, paddingRight: 20, width: 90, height: 20)
+        mileageButton.anchor(top: topAnchor, left: nil, bottom: unitsLabel.topAnchor, right: rightAnchor, paddingTop: 7, paddingLeft: 0, paddingBottom: 3, paddingRight: 20, width: 80, height: 20)
         
         thumbNailImageView.contentMode = .scaleAspectFill
-        thumbNailImageView.layer.cornerRadius = (self.frame.width/3) / 2
+        thumbNailImageView.layer.cornerRadius = (self.frame.width/3.5) / 2
         thumbNailImageView.clipsToBounds = true
         
     }

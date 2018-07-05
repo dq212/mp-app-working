@@ -156,7 +156,9 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         let cmBg:UIView = {
             let view = UIView()
             view.backgroundColor = UIColor.white
-            //view.layer.cornerRadius = 20
+            view.layer.borderWidth = 2.0
+            view.layer.borderColor =   UIColor.mainRed().cgColor
+            view.layer.cornerRadius = 10
             return view
         }()
         
@@ -184,7 +186,7 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         
-         cmBg.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 90, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+         cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:10, paddingLeft: 10, paddingBottom: 210, paddingRight: 10, width: 0, height: 0)
         
         cmBg.dropShadow()
         

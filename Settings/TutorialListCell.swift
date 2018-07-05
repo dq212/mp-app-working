@@ -23,7 +23,7 @@ class TutorialListCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = .left
         label.font = UIFont(name: "Avenir-Medium", size: 16)
-        label.textColor = .white
+        label.textColor = .darkGray
         label.numberOfLines = 0
         label.text = ""
         return label
@@ -33,7 +33,7 @@ class TutorialListCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = .left
         label.font = UIFont(name: "Avenir", size: 12)
-        label.textColor = UIColor.lightGray
+        label.textColor = UIColor.gray
         label.numberOfLines = 0
         label.text = "Description goes here"
         return label
@@ -41,7 +41,7 @@ class TutorialListCell: UITableViewCell {
     
     let divider: UIView = {
         let view = UIView()
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .lightGray
         return view
     }()
     
@@ -49,7 +49,7 @@ class TutorialListCell: UITableViewCell {
     override init(style:UITableViewCellStyle, reuseIdentifier: String?) {
         super .init(style: .default, reuseIdentifier: reuseIdentifier)
         
-        backgroundColor = .darkGray
+        backgroundColor = UIColor.tableViewBgGray()
         addSubview(thumbNailImageView)
         addSubview(titleLabel)
         addSubview(descLabel)
@@ -61,7 +61,7 @@ class TutorialListCell: UITableViewCell {
         //titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         descLabel.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
 
-        divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 1.5, paddingRight: 20, width: 0, height: 0.5)
+        divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: -1, paddingRight: 20, width: 0, height: 0.25)
     }
     
     required init?(coder aDecoder: NSCoder) {

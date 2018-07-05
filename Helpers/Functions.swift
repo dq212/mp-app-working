@@ -109,7 +109,7 @@ func checkConnectionForBackup(vc:UIViewController, bikes:[FB_Bike]?,  msg_string
 //                    print("\(BikeData.sharedInstance.allBikes[0].projects?.count) COUNTING PROJECTS THAT EXIST LOCALLY - restore")
                         
                 // put popup here
-                        let alert = UIAlertController(title: "Are you sure you want to RESTORE?", message: "Restoring is good if you just accidentally deleted something you've backed up. But Restoring will wipe any NEW work you have. You can hit 'Cancel' and the do a Backup first.", preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Are you sure you want to RESTORE?", message: "RESTORE will retrieve the latest backup ONLY.\nAny new entries since your last backup will be lost.\nPlease hit cancel and contact us if you have any questions.", preferredStyle: .alert)
                         //alert.view.tintColor = UIColor.mainRed()
                         alert.addAction(UIAlertAction(title: "All good, let's Restore", style: .destructive, handler: {(alertAction) in
                            
@@ -561,7 +561,7 @@ func showLegalAgreementSuccessAnimation(vc:UIViewController, v:UIView) {
             savedLabel.layer.transform = CATransform3DMakeScale(1, 1, 1)
         }, completion: { (completed) in
             //completed
-            UIView.animate(withDuration: 0.6, delay: 6.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
+            UIView.animate(withDuration: 0.6, delay: 7.5, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
                 savedLabel.layer.transform = CATransform3DMakeScale(0.1, 0.1, 0.1)
                 savedLabel.alpha = 0
                 v.layer.transform = CATransform3DMakeScale(0.1, 0.1, 0.1)

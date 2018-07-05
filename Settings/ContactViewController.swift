@@ -72,7 +72,7 @@ class ContactViewController: UIViewController, MFMailComposeViewControllerDelega
         composeVC.mailComposeDelegate = self
         
         // Configure the fields of the interface.
-        composeVC.setToRecipients(["motopreserve@gmail.com"])
+        composeVC.setToRecipients(["info@motopreserve.com"])
         composeVC.setSubject("MotoPreserve Customer Feedback")
         //composeVC.setMessageBody("Hello from California!", isHTML: false)
         
