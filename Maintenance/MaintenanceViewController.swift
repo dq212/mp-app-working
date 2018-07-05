@@ -45,7 +45,7 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         button.setTitle("Update", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .mainRed()
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 2
         return button
     }()
     

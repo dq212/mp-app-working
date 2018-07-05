@@ -413,7 +413,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         composeVC.mailComposeDelegate = self
         
         // Configure the fields of the interface.
-        composeVC.setToRecipients(["motopreserve@gmail.com"])
+        composeVC.setToRecipients(["info@motopreserve.com"])
         composeVC.setSubject("MotoPreserve User Feedback")
         //composeVC.setMessageBody("Hello from California!", isHTML: false)
         

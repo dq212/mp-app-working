@@ -38,18 +38,30 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
         super .viewWillDisappear(true)
         keyArray = []
         valueArray = []
+        videos = []
+      sortedSections = []
+      tableSection = []
+      categoryArray = []
+      videoTextArray = []
     }
+    
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(true)
         keyArray = []
         valueArray = []
+        sortedSections = []
+        tableSection = []
+        categoryArray = []
+        videoTextArray = []
          self.videos = []
         checkConnection()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo_2"))
         self.delegate = self
         tableView.separatorStyle = .none

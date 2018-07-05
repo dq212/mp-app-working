@@ -51,6 +51,7 @@
 		3D674E941F9CB57300211E7D /* PhotoSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D674E691F9CB57300211E7D /* PhotoSelectorHeader.swift */; };
 		3D674E971F9CB63500211E7D /* MRPhotosHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D674E951F9CB63400211E7D /* MRPhotosHelper.swift */; };
 		3D674E981F9CB63500211E7D /* PhotoAlbumHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D674E961F9CB63400211E7D /* PhotoAlbumHeader.swift */; };
+		3D7EF75E20EE5E1600F3CBA7 /* MP_intro_2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3D7EF75D20EE5E1600F3CBA7 /* MP_intro_2.mp4 */; };
 		3D7FAE451FE0755E0089C790 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7FAE441FE0755E0089C790 /* Assets.xcassets */; };
 		3D91282C1FD5A7AB0096851A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D91282B1FD5A7AB0096851A /* GoogleService-Info.plist */; };
 		3D91282E1FD6B95A0096851A /* FB_Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D91282D1FD6B95A0096851A /* FB_Video.swift */; };
@@ -107,6 +108,7 @@
 		3D674E691F9CB57300211E7D /* PhotoSelectorHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorHeader.swift; sourceTree = "<group>"; };
 		3D674E951F9CB63400211E7D /* MRPhotosHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MRPhotosHelper.swift; sourceTree = "<group>"; };
 		3D674E961F9CB63400211E7D /* PhotoAlbumHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumHeader.swift; sourceTree = "<group>"; };
+		3D7EF75D20EE5E1600F3CBA7 /* MP_intro_2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = MP_intro_2.mp4; sourceTree = "<group>"; };
 		3D7FAE441FE0755E0089C790 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D87DA5F1FD58443009C99B1 /* MotoPreserve-App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "MotoPreserve-App.entitlements"; sourceTree = "<group>"; };
 		3D91282B1FD5A7AB0096851A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				3D87DA5F1FD58443009C99B1 /* MotoPreserve-App.entitlements */,
 				3D99DD0F1FDAEF9B0005D078 /* MP_intro_1.mp4 */,
+				3D7EF75D20EE5E1600F3CBA7 /* MP_intro_2.mp4 */,
 				3D4D257A1F9BB39A00AEBC9E /* AppDelegate.swift */,
 				3D7FAE441FE0755E0089C790 /* Assets.xcassets */,
 				3D91282B1FD5A7AB0096851A /* GoogleService-Info.plist */,
@@ -366,6 +369,7 @@
 			files = (
 				3D4D25851F9BB39A00AEBC9E /* LaunchScreen.storyboard in Resources */,
 				3D99DD101FDAEF9B0005D078 /* MP_intro_1.mp4 in Resources */,
+				3D7EF75E20EE5E1600F3CBA7 /* MP_intro_2.mp4 in Resources */,
 				3D7FAE451FE0755E0089C790 /* Assets.xcassets in Resources */,
 				3D91282C1FD5A7AB0096851A /* GoogleService-Info.plist in Resources */,
 			);

@@ -134,12 +134,12 @@ class PreviewPhotoContainerView: UIView {
         item.imagesArray?.append(post!)
        // projectImages = item.imagesArray!
         self.project = item
-        print("\(projectIndexPath) Project Index Path from save local")
+       // print("\(projectIndexPath) Project Index Path from save local")
         updateBikes()
         // print(item == bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!])
         //   bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = item
         //  bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike
-        print("\(item.imagesArray?.count) = count of images before save")
+       // print("\(item.imagesArray?.count) = count of images before save")
         saveBikes()
         //updateBikes()
     }

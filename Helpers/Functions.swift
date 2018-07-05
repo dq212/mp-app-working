@@ -53,7 +53,7 @@ func registerDefaults() {
 //----------CHECK CONNECTION---------->>>
 func checkConnectionForBackup(vc:UIViewController, bikes:[FB_Bike]?,  msg_string:String) {
     var isConnected:Bool?
-    var msg = msg_string
+    let msg = msg_string
     
     print("THIS IS THE MESSAGE STRING \(msg)")
         let connectedRef = Database.database().reference(withPath: ".info/connected")
@@ -179,7 +179,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                 if (project.imagesArray != nil ) {
                     
                     for image in project.imagesArray! {
-                        print("number of images in the array \(project.imagesArray?.count)")
+                       // print("number of images in the array \(project.imagesArray?.count)")
                         let iRef = projectRef.child("images").child(image.uniqueID!)
                         let values = ["uniqueID":image.uniqueID as Any, "imageName":image.imageName ,"checked":image.checked as Any, "timestamp":image.timestamp as Any] as [String : Any]
                         iRef.updateChildValues(values as Any as! [AnyHashable : Any], withCompletionBlock: { (error, ref) in
@@ -280,10 +280,10 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                     let p_timestamp = (dv as AnyObject).object(forKey:"timestamp") as? NSNumber
                     let p_images = (dv as AnyObject).object(forKey:"images") as? NSDictionary as? [String: Any]
                     
-                    print("PROJECTS \(projects?.count)")
-                    print("TASKS \(maintenanceTasks?.count)")
-                    print("IMAGES \(projectImages.count)")
-                    
+//                    print("PROJECTS \(projects?.count)")
+//                    print("TASKS \(maintenanceTasks?.count)")
+//                    print("IMAGES \(projectImages.count)")
+//
                     if p_images != nil {
                                                     print("\(p_images?.count) the dictionary of images")
                         for pict in p_images! {
@@ -292,7 +292,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
                             let i_name = (pv as AnyObject).object(forKey:"imageName") as? String
                             let i_timestamp = (pv as AnyObject).object(forKey:"timestamp") as? NSNumber
                             let i_uniqueID = (pv as AnyObject).object(forKey:"uniqueID") as? String
-                            print("how many damn images do I have? \(p_images?.count)")
+//                            print("how many images do I have? \(p_images?.count)")
                             
                           
                             let post = PostImage(imageName: i_name!, uniqueID: i_uniqueID, timestamp: i_timestamp, checked: i_checked)

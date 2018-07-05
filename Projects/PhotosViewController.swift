@@ -624,7 +624,6 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
                 
                     let manager = PHImageManager.default()
                     let option = PHImageRequestOptions()
-                    var thumbnail = UIImage()
                     option.isSynchronous = true
                 if let fetchResult: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: stringArray, options: nil) {
                 if fetchResult.count > 0 {
