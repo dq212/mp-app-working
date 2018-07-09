@@ -373,6 +373,7 @@ func putBackupItems(vc:UIViewController, backupBikes:[FB_Bike], ref:DatabaseRefe
 
 
 
+
 /////
 
 func addProjectImages(project:FB_ProjectItem, bike:FB_Bike) {
@@ -545,6 +546,8 @@ func showLegalAgreementSuccessAnimation(vc:UIViewController, v:UIView) {
         savedLabel.font = UIFont(name: "Avenir-Medium", size: 20)
         //savedLabel.numberOfLines = 0
         savedLabel.textColor = .white
+        savedLabel.isEditable = false
+        savedLabel.isSelectable = false
         savedLabel.textAlignment = .center
         savedLabel.backgroundColor = UIColor(white:0, alpha:0.9)
         savedLabel.textContainerInset = UIEdgeInsetsMake(40, 10, 20, 10);

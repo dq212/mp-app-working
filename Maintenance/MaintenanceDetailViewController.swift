@@ -20,7 +20,7 @@ protocol MaintenanceDetailViewControllerDelegate: class {
     func maintenanceDetailViewController(_ controller: MaintenanceDetailViewController, didFinishEditing item: FB_MaintenanceItem)
 }
 
-class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIPickerViewDelegate, UITextFieldDelegate, UIPickerViewDataSource {
+class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIPickerViewDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIScrollViewDelegate {
     
     var doneBarButton: UIBarButtonItem?
     var cancelBarButton: UIBarButtonItem?
@@ -255,6 +255,10 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         sv.clipsToBounds = true
         return sv
     }()
+    var svContentView:UIView = {
+        let v = UIView()
+        return v
+    }()
     
     let dottedLineView1 = UIView()
     let dottedLineView2 = UIView()
@@ -415,7 +419,9 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
     }
     
      override func viewDidLoad() {
-        super.viewDidLoad() 
+        super.viewDidLoad()
+        scrollView.delegate = self
+        scrollView.isUserInteractionEnabled = true
         //for segemented control
         if bike.selectedValue != nil {
             self.valueType = bike.selectedValue!
@@ -484,27 +490,31 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         scrollView.delegate = self
         
         view.addSubview(scrollView)
-        scrollView.backgroundColor = .white
+        scrollView.addSubview(svContentView)
+        svContentView.backgroundColor = .white
     
-        scrollView.addSubview(self.nameTextField)
-        scrollView.addSubview(self.categoryLabel)
+        svContentView.addSubview(self.nameTextField)
+        svContentView.addSubview(self.categoryLabel)
         
-        scrollView.addSubview(self.notesTextView)
+        svContentView.addSubview(self.notesTextView)
         
-        scrollView.addSubview(topDividerView)
-        scrollView.addSubview(setReminderLabel)
+        svContentView.addSubview(topDividerView)
+        svContentView.addSubview(setReminderLabel)
 //        scrollView.addSubview(middleDividerView)
-        scrollView.addSubview(dottedLineView1)
-        scrollView.addSubview(dottedLineView2)
-        scrollView.addSubview(self.currentMileageLabel)
-        scrollView.addSubview(self.actualMileageLabel)
+        svContentView.addSubview(dottedLineView1)
+        svContentView.addSubview(dottedLineView2)
+        svContentView.addSubview(self.currentMileageLabel)
+        svContentView.addSubview(self.actualMileageLabel)
 //        scrollView.addSubview(milesHoursSegmentedControl)
-        scrollView.addSubview(hoursMilesLabel)
+        svContentView.addSubview(hoursMilesLabel)
 //        scrollView.addSubview(mileageTextField)
         
-        scrollView.addSubview(self.selectedCategoryLabel)
+        svContentView.addSubview(self.selectedCategoryLabel)
+        
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
        
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:100, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:topBarHeight + 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:view.frame.height + 120)
         
         view.backgroundColor = .white
         scrollView.addSubview(pickerView)
@@ -521,8 +531,9 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         UIBarButtonItem.appearance().setTitleTextAttributes([ NSAttributedStringKey.font: UIFont(name: "Avenir-Medium", size: 18)!], for: UIControlState.disabled)
         UIBarButtonItem.appearance().setTitleTextAttributes([ NSAttributedStringKey.font: UIFont(name: "Avenir-Medium", size: 18)!], for: UIControlState.highlighted)
         UIBarButtonItem.appearance().setTitleTextAttributes([ NSAttributedStringKey.font: UIFont(name: "Avenir-Medium", size: 18)!], for: UIControlState.focused)
+        
 
-        titleBar.addTitleBarAndLabel(page: view, initialTitle:"Add a Maintenance Item", ypos: 64, color:.mainRed())
+        titleBar.addTitleBarAndLabel(page: view, initialTitle:"Add a Maintenance Item", ypos: topBarHeight, color:.mainRed())
         
         doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
                 
@@ -550,43 +561,45 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         numberPicker.setValue(UIColor.white, forKeyPath: "textColor")
         numberPicker.setValue(1.0, forKeyPath: "alpha")
       
+//        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:90, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
+        
+        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height + 120)
         
     
-
-        self.nameTextField.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 30)
+        self.nameTextField.anchor(top: svContentView.topAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 30)
         //
         self.categoryLabel.anchor(top: nameTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         //self.categoryLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        pickerView.anchor(top: categoryLabel.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 80)
+        pickerView.anchor(top: categoryLabel.topAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 80)
         
-          self.notesTextView.anchor(top: pickerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+          self.notesTextView.anchor(top: pickerView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 25, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
         
-        self.dottedLineView1.anchor(top: notesTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
+        self.dottedLineView1.anchor(top: notesTextView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
        // self.hoursMilesLabel.anchor(top: dottedLineView1.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
 
 //        self.milesHoursSegmentedControl.anchor(top: dottedLineView1.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         
         
-        self.currentMileageLabel.anchor(top: dottedLineView1.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop:10, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        self.currentMileageLabel.anchor(top: dottedLineView1.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: nil, paddingTop:10, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         self.actualMileageLabel.anchor(top: nil, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop:10, paddingLeft:8, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
          self.currentMileageLabel.centerYAnchor.constraint(equalTo: actualMileageLabel.centerYAnchor).isActive = true
         
 //        self.mileageTextField.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 200, height: 25 )
         
-        self.dottedLineView2.anchor(top: currentMileageLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
+        self.dottedLineView2.anchor(top: currentMileageLabel.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
        
 //        self.middleDividerView.anchor(top: notesTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
 
-        self.remindLabel.anchor(top: dottedLineView2.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0)
+        self.remindLabel.anchor(top: dottedLineView2.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: nil, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0)
         
-        self.shouldRemindSwitch.anchor(top: dottedLineView2.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0)
+        self.shouldRemindSwitch.anchor(top: dottedLineView2.bottomAnchor, left: nil, bottom: nil, right: svContentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0)
 
         self.setReminderLabel.anchor(top: dottedLineView2.bottomAnchor, left: nil, bottom: nil, right: shouldRemindSwitch.leftAnchor, paddingTop: 30, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         self.setReminderLabel.centerYAnchor.constraint(equalTo: shouldRemindSwitch.centerYAnchor).isActive = true
         
-        numberPicker.anchor(top: setReminderLabel.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 22, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        numberPicker.anchor(top: setReminderLabel.bottomAnchor, left: svContentView.leftAnchor, bottom: svContentView.bottomAnchor, right: svContentView.rightAnchor, paddingTop: 22, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         shouldRemindSwitch.addTarget(self, action: #selector(switchChanged(_ :)), for: .valueChanged)
         
@@ -689,7 +702,7 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
             if item.reminderNumber != nil {
                 if (item.shouldRemind == true) {
                     shouldRemindSwitch.isOn = true
-                   
+                   self.updateViewConstraints()
                     if item.reminderNumber != nil {
                         self.selectedNumber = String(describing: item.reminderNumber!)
                         self.setReminderLabel.text = "Set for: \(self.selectedNumber) \(self.valueType)"
@@ -698,6 +711,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
                      self.selectedNumber = "100"
                      shouldRemindSwitch.isOn = false
                 }
+                
+                
             }
             
         }
@@ -738,7 +753,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
     {
         if(text == "\n")
         {
-            view.endEditing(true)
+           // view.endEditing(true)
+            textView.text = textView.text + "\n"
             return false
         } else {
             return true

@@ -20,8 +20,14 @@ class NoDataViewController: UIViewController, MFMailComposeViewControllerDelegat
     
     let contactView:UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 0.1)
+       // view.backgroundColor = UIColor(white: 0, alpha: 0.1)
         return view
+    }()
+    
+    let scrollView:UIScrollView = {
+       let sv = UIScrollView()
+        sv.clipsToBounds = true;
+        return sv
     }()
     
     let contactText:UITextView = {
@@ -51,7 +57,7 @@ class NoDataViewController: UIViewController, MFMailComposeViewControllerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         titleBar.addTitleBarAndLabel(page: view, initialTitle: "STOCK DATA", ypos: 64)
+        
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo_2"))
 //        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(cancelThisView))
 //        navigationItem.leftBarButtonItem?.tintColor = .mainRed()
@@ -61,17 +67,40 @@ class NoDataViewController: UIViewController, MFMailComposeViewControllerDelegat
         contactEmailButton.addTarget(self, action: #selector(emailButtonHandler), for: .touchUpInside)
         
         view.backgroundColor = .white
-        //view.addSubview(contactView)
-        // contactView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 44, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        view.addSubview(contactText)
-        contactText.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 120, paddingLeft: 30, paddingBottom: 0, paddingRight: 30, width: 0, height:300)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contactView)
         
-        view.addSubview(contactEmailButton)
-        contactEmailButton.anchor(top: contactText.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 30, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 0)
+        adjustUITextViewHeight(arg: contactText)
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 64, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+         contactView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop:25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
+        contactView.addSubview(contactText)
+        contactView.addSubview(contactEmailButton)
+        contactText.anchor(top: contactView.topAnchor, left: contactView.leftAnchor, bottom: nil, right: contactView.rightAnchor, paddingTop: 25, paddingLeft: 30, paddingBottom: 0, paddingRight: 30, width: 0, height: 0)
+        
+        let fixedWidth = contactText.frame.size.width
+        let newSize = contactText.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        contactText.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+        
+        let contentSize = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height + 100)
+        contactView.frame.size = contentSize
+//
+        contactEmailButton.anchor(top: contactText.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 0)
         contactEmailButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        titleBar.addTitleBarAndLabel(page: view, initialTitle: "STOCK DATA", ypos: topBarHeight)
     }
+    
+    func adjustUITextViewHeight(arg : UITextView)
+    {
+        arg.translatesAutoresizingMaskIntoConstraints = true
+        arg.sizeToFit()
+        arg.isScrollEnabled = false
+    }
+
     
     @objc func cancelThisView() {
         dismiss(animated: true, completion: nil)

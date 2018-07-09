@@ -134,7 +134,7 @@ class SignUpViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(logoButton)
         
-        logoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 200, height: 200)
+        logoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 180, height: 180)
 
         logoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         setupInputFields()
@@ -154,10 +154,10 @@ class SignUpViewController: UIViewController {
         view.addSubview(alreadyRegisteredButton)
         
         
-        stackView.anchor(top: logoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 120, paddingRight: 70, width: 0, height: 120)
+        stackView.anchor(top: logoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 0, height: 120)
         view.addSubview(stackView)
         
-        alreadyRegisteredButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 60, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        alreadyRegisteredButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
     

@@ -21,7 +21,7 @@ class StockCell: UITableViewCell {
         label.textAlignment = .left
         label.font = UIFont(name: "Helvetica Bold", size: 14)
         label.textColor = UIColor.black
-        label.numberOfLines = 0
+        label.numberOfLines = 3
         label.text = ""
         return label
     }()
@@ -31,7 +31,7 @@ class StockCell: UITableViewCell {
         label.textAlignment = .left
         label.font = UIFont(name: "Helvetica", size: 14)
         label.textColor = UIColor.darkGray
-        label.numberOfLines = 0
+        label.numberOfLines = 3
         label.text = ""
         return label
     }()
@@ -47,10 +47,10 @@ class StockCell: UITableViewCell {
         
         addSubview(itemLabel)
         addSubview(divider)
-        itemLabel.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        itemLabel.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         addSubview(dataLabel)
-        dataLabel.anchor(top: topAnchor, left: itemLabel.rightAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        dataLabel.anchor(top: topAnchor, left: itemLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         
         divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
         

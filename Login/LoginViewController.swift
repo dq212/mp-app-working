@@ -45,14 +45,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    let profileImageButton: UIButton = {
-        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "add_userPhoto").withRenderingMode(.alwaysOriginal), for: .normal)
- 
-        button.addTarget(self, action: #selector(handleProfileImage), for: .touchUpInside)
-        button.backgroundColor = .blue
-        return button
-    }()
+//    let profileImageButton: UIButton = {
+//        let button = UIButton()
+//        button.setImage(#imageLiteral(resourceName: "add_userPhoto").withRenderingMode(.alwaysOriginal), for: .normal)
+//
+//        button.addTarget(self, action: #selector(handleProfileImage), for: .touchUpInside)
+//        button.backgroundColor = .blue
+//        return button
+//    }()
     
     let forgotPasswordButton: UIButton = {
         let button = UIButton(type: .system)
@@ -111,7 +111,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         } else {
-            self.showAlert("Please make sure that you entered a valid email.\n\nThank you,\nThe MotoPreserve Team")
+            self.showAlert("Please enter a valid email address in the email field, then press \"Get new password\"\n\nThank you,\nThe MotoPreserve Team")
         }
        
     }
@@ -201,6 +201,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.textColor = .black
         tv.textAlignment = .center
+        tv.isEditable = false
+        tv.isSelectable = false
         tv.isEditable = false
         tv.text = "Please accept the\nTerms & Conditions to get started with MotoPreserve App."
         return tv
@@ -298,7 +300,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         registerDefaults()
 
-        logoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:200, height: 200)
+        logoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:180, height: 180)
         
         logoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
@@ -327,8 +329,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         stackView.anchor(top: logoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 0, height: 120)
         view.addSubview(stackView)
         
-        gotoRegisterButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 60, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        forgotPasswordButton.anchor(top: gotoRegisterButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        gotoRegisterButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        forgotPasswordButton.anchor(top: gotoRegisterButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
    

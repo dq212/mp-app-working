@@ -17,6 +17,8 @@ class TitleBar: UIView {
     
     func addTitleBarAndLabel(page:UIView, initialTitle:String, ypos:CGFloat, color:UIColor = .black) -> UIView {
         
+        
+        
         headerTitleBar = {
             let tb = UIView()
             tb.backgroundColor = color
@@ -40,7 +42,7 @@ class TitleBar: UIView {
         
         page.addSubview(headerTitleBar!)
         updateTitle(newTitle: title)
-        headerTitleBar?.insertSubview(headerTitleLabel, at: 0)
+        headerTitleBar?.insertSubview(headerTitleLabel, at: 44)
         headerTitleBar?.anchor(top: page.topAnchor, left: page.leftAnchor, bottom: nil, right: page.rightAnchor, paddingTop: CGFloat(ypos), paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: page.frame.width, height:25)
         
         headerTitleLabel.anchor(top: headerTitleBar?.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: (headerTitleBar?.frame.width)!, height: 0)

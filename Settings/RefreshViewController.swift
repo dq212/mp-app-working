@@ -38,6 +38,8 @@ class RefreshViewController: UIViewController {
         tv.font = UIFont(name: "Avenir-Medium", size: 14)
         tv.textAlignment = .left
         tv.isScrollEnabled = false
+        tv.isEditable = false
+        tv.isSelectable = false
         tv.textColor = UIColor.black
         tv.backgroundColor = UIColor(white: 0, alpha: 0.0)
         tv.text = "Touch the Refreh button to update/sync your Stock Data with out database.\n\nDoing this will add New Videos and Bike Model options to your local database.\n\nWe are constantly trying to to make sure you have everything you need to keep everything up to date, accurate, and fresh to keep you moving."

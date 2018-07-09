@@ -16,7 +16,7 @@ import AVFoundation
 import AVKit
 import DataCache
 
-class AllBikesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BikeDetailViewControllerDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, UITabBarControllerDelegate, MileageViewControllerDelegate {
+class AllBikesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BikeDetailViewControllerDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate, UITabBarControllerDelegate, MileageViewControllerDelegate, UIScrollViewDelegate {
     
     var tableView: UITableView!
     var addBikeButton: UIBarButtonItem!
@@ -58,10 +58,20 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         return view
     }()
     
+    let scrollView:UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
+
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        scrollView.delegate = self
+        scrollView.isUserInteractionEnabled = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddBike))
         
         //Mark: load any user bikes
@@ -77,6 +87,9 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.setContentOffset(CGPoint.zero, animated: true)
     
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo_2"))
+        
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
         titleBar.addTitleBarAndLabel(page: view, initialTitle: "GARAGE", ypos: 0, color:.black)
         
@@ -98,14 +111,22 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         }()
         
         
-        let cmImg:UIImageView = {
-            let iv = UIImageView(image:#imageLiteral(resourceName: "cm_bikes"))
-            iv.contentMode = .scaleAspectFit
-            return iv
-            
-        }()
+//        let cmImg:UIImageView = {
+//            let iv = UIImageView(image:#imageLiteral(resourceName: "cm_bikes"))
+//            iv.contentMode = .scaleAspectFit
+//            return iv
+//
+//        }()
         
-
+        let cmText:UITextView = {
+            let tv = UITextView()
+            tv.font = UIFont(name: "Avenir-Medium", size: 16)
+            tv.textColor = UIColor.black
+            tv.isEditable = false
+            tv.isSelectable = false
+            tv.text = "Welcome to the GARAGE, where you'll be storing your BIKE(S).\n\nTouch the “+” button on the upper right to add a new BIKE.\n\nEnter a title, select a Make, Model, Year, and add a Thumbnail.\n\nIf your BIKE is not listed please select “Other”.\n\nSwipe left to edit from within the GARAGE list.\n\n"
+            return tv
+        }()
         
         let cmEmailButton:UIButton = {
             let button = UIButton(type: .system)
@@ -122,28 +143,48 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
             return iv
         }()
         
-        cmEmailButton.addTarget(self, action: #selector(emailButtonHandler), for: .touchUpInside)
+       // cmEmailButton.addTarget(self, action: #selector(emailButtonHandler), for: .touchUpInside)
         
-        view.addSubview(cm)
+        adjustUITextViewHeight(arg: cmText)
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(cm)
+        
         cm.addSubview(cmBg)
-        cm.addSubview(cmImg)
+       // cm.addSubview(cmImg)
+        cmBg.addSubview(cmText)
         
-        cm.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+     
         
-         cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
+        
+        let textHeightOffset = (cmText.frame.height + view.frame.height) - view.frame.height
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        cm.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop:0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height + textHeightOffset )
+
+       // cm.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        // cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         
-        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 190, paddingRight: 10, width: 0, height: 0)
+       // cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 190, paddingRight: 10, width: 0, height: 0)
+        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: cm.leftAnchor, bottom: nil, right: cm.rightAnchor, paddingTop:10, paddingLeft: 10, paddingBottom:20, paddingRight: 10, width: 0, height: 0)
         
-        cm.addSubview(cmEmailButton)
+        cmText.anchor(top: cmBg.topAnchor, left: cmBg.leftAnchor, bottom: cmBg.bottomAnchor, right: cmBg.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingBottom: 0, paddingRight: 15, width: 0, height: 0)
+        
+        let fixedWidth = cmText.frame.size.width
+        let newSize = cmText.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        cmText.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height + 10)
+        
+       // cm.addSubview(cmEmailButton)
         
        // cmBg.dropShadow()
         
-        cmEmailButton.anchor(top: cm.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 25, paddingRight: 0, width: 100, height: 0)
-        cmEmailButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        //cmEmailButton.anchor(top: cmText.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 0)
+        //cmEmailButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
-        self.coachMark = cm
+        self.coachMark = scrollView
         coachMark?.isHidden = false
         
         //show if not logged in
@@ -176,7 +217,14 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-   
+    
+    func adjustUITextViewHeight(arg : UITextView)
+    {
+        arg.translatesAutoresizingMaskIntoConstraints = true
+        arg.sizeToFit()
+        arg.isScrollEnabled = false
+    }
+
     
 //    //MARK: this is where I check the connection, this is just to establish a cached UID
         func checkConnection() {

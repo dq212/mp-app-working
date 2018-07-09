@@ -214,6 +214,8 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
         selectedIndexPath = BikeData.sharedInstance.selectedIndexPath
         notesTextView.text = "Notes:"
         print("VIEW DID LOAD PROJECT INDEX PATH \(projectIndexPath)")
@@ -229,7 +231,7 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         scrollView.backgroundColor = .white
         scrollView.addSubview(svContentView)
         
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:90, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: topBarHeight + 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
         
         svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
         
@@ -244,8 +246,8 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         stackView?.axis = .vertical
         stackView?.distribution = UIStackViewDistribution(rawValue: Int(1.0))!
         svContentView.addSubview(stackView!)
-        
-        titleBar.addTitleBarAndLabel(page: view, initialTitle: "Add a Project", ypos: 64, color:.mainRed())
+      
+        titleBar.addTitleBarAndLabel(page: view, initialTitle: "Add a Project", ypos: topBarHeight, color:.mainRed())
 
         svContentView.addSubview(self.thumbnailLabel)
         svContentView.addSubview(self.categoryLabel)
@@ -405,11 +407,14 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
     }
     
     @objc func doneClicked(){
+        
+        print("done clicked here")
         if projectToEdit != nil {
             projectToEdit?.notes = notesTextView.text
            // bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = projectToEdit!
            // bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike
             saveBikes()
+            print("got here")
             view.endEditing(true)
         }
         else {
@@ -431,7 +436,8 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
     {
         if(text == "\n")
         {
-            view.endEditing(true)
+            //view.endEditing(true)
+            textView.text = textView.text + "\n"
             return false
         } else {
             return true

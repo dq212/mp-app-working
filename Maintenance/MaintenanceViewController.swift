@@ -12,7 +12,7 @@ import FirebaseStorage
 import FirebaseDatabase
 
 
-class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, MaintenanceDetailViewControllerDelegate
+class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, MaintenanceDetailViewControllerDelegate, UIScrollViewDelegate
 
 {
   
@@ -79,6 +79,14 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         return tb
     }()
     
+    let scrollView:UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         tableView.setEditing(false, animated: true)
@@ -92,6 +100,8 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = self
+        scrollView.isUserInteractionEnabled = true
          drawDottedLines()
         self.bike = BikeData.sharedInstance.bike!
         self.selectedIndexPath = BikeData.sharedInstance.selectedIndexPath
@@ -131,8 +141,9 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         
         mileageView.backgroundColor = UIColor.black
         alertMileageTextField.keyboardType = .numberPad
-        
-        titleBar.addTitleBarAndLabel(page: view, initialTitle: "MAINTENANCE LOG", ypos: 64)
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        titleBar.addTitleBarAndLabel(page: view, initialTitle: "MAINTENANCE LOG", ypos: topBarHeight)
         mileageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 89, paddingLeft: 00, paddingBottom: 0, paddingRight: 0, width: 0, height: 75)
         
         dottedLineView1.anchor(top: mileageView.topAnchor, left: mileageView.leftAnchor, bottom: nil, right: mileageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
@@ -153,6 +164,14 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
             return view
         }()
         
+        let cmText:UITextView = {
+            let tv = UITextView()
+            tv.font = UIFont(name: "Avenir-Medium", size: 16)
+            tv.textColor = UIColor.black
+            tv.text = "Log your MAINTENANCE.\n\nTouch the “+” button in the upper right to add a new item.\n\nEnter a Title, document Mileage, select a Category and add Notes.\n\nYou can also set a reminder to schedule upcoming MAINTENANCE.\n\n"
+            return tv
+        }()
+        
         let cmBg:UIView = {
             let view = UIView()
             view.backgroundColor = UIColor.white
@@ -164,33 +183,52 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         
     
         
-        let cmImg:UIImageView = {
-            let iv = UIImageView(image:#imageLiteral(resourceName: "cm_maintenance"))
-            iv.contentMode = .scaleAspectFit
-            return iv
-            
-        }()
+//        let cmImg:UIImageView = {
+//            let iv = UIImageView(image:#imageLiteral(resourceName: "cm_maintenance"))
+//            iv.contentMode = .scaleAspectFit
+//            return iv
+//
+//        }()
      
         let cmArrowImage:UIImageView = {
             let iv = UIImageView(image: #imageLiteral(resourceName: "curve_sign_small"))
             return iv
         }()
         
-        view.addSubview(cm)
-        cm.addSubview(cmBg)
-        cm.addSubview(cmImg)
-        cm.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 64, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
+        adjustUITextViewHeight(arg: cmText)
+        view.addSubview(scrollView)
+        scrollView.addSubview(cm)
+        cm.addSubview(cmBg)
+        cmBg.addSubview(cmText)
+       // cm.addSubview(cmImg)
+        
+        let textHeightOffset = (cmText.frame.height + view.frame.height) - view.frame.height
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: topBarHeight, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        cm.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop:0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height + textHeightOffset )
+      
+        //cm.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 64, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+       // cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
         
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         
-         cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:10, paddingLeft: 10, paddingBottom: 210, paddingRight: 10, width: 0, height: 0)
+         cmBg.anchor(top: cmArrowImage.bottomAnchor, left: cm.leftAnchor, bottom: nil, right: cm.rightAnchor, paddingTop:10, paddingLeft: 10, paddingBottom:20, paddingRight: 10, width: 0, height:0)
+        
+          cmText.anchor(top: cmBg.topAnchor, left: cmBg.leftAnchor, bottom: cmBg.bottomAnchor, right: cmBg.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingBottom: 0, paddingRight: 15, width: 0, height: 0)
+        
+      
+        let fixedWidth = cmText.frame.size.width
+        let newSize = cmText.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        cmText.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height + 20)
+        
+
         
         cmBg.dropShadow()
         
-        self.coachMark = cm
+        self.coachMark = scrollView
         coachMark?.isHidden = false
         mileageView.isHidden = true
         
@@ -210,7 +248,13 @@ class MaintenanceViewController: UIViewController, UITextFieldDelegate, UITableV
         }
     }
     
-    
+    func adjustUITextViewHeight(arg : UITextView)
+    {
+        arg.translatesAutoresizingMaskIntoConstraints = true
+        arg.sizeToFit()
+        arg.isScrollEnabled = false
+    }
+
     
     func drawDottedLines() {
         //layer dashed line

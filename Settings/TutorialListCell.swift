@@ -24,7 +24,7 @@ class TutorialListCell: UITableViewCell {
         label.textAlignment = .left
         label.font = UIFont(name: "Avenir-Medium", size: 16)
         label.textColor = .darkGray
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.text = ""
         return label
     }()
@@ -34,7 +34,7 @@ class TutorialListCell: UITableViewCell {
         label.textAlignment = .left
         label.font = UIFont(name: "Avenir", size: 12)
         label.textColor = UIColor.gray
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.text = "Description goes here"
         return label
     }()
@@ -57,11 +57,11 @@ class TutorialListCell: UITableViewCell {
         thumbNailImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 80, height: 45)
          //thumbNailImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
 
-        titleLabel.anchor(top: thumbNailImageView.topAnchor, left: thumbNailImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
+        titleLabel.anchor(top: thumbNailImageView.topAnchor, left: thumbNailImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         //titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        descLabel.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
+        descLabel.anchor(top: titleLabel.bottomAnchor, left: titleLabel.leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 6, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
 
-        divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: -1, paddingRight: 20, width: 0, height: 0.25)
+        divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: -1, paddingRight: 20, width: 0, height: 0.5)
     }
     
     required init?(coder aDecoder: NSCoder) {

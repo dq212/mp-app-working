@@ -112,6 +112,7 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         tv.textAlignment = .left
         tv.font = UIFont(name: "Avenir", size:14)
         tv.textColor = UIColor.black
+        tv.isSelectable = false
         tv.isEditable = false
         tv.text = "Enter your mileage here.\n\nYou can set reminders to do particular maintenance based on past mileage entries, so you can always stay on top of things like oil changes, tune-ups, tire cable lubrication, etc..."
         return tv
@@ -186,9 +187,12 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
     var numValues = [String]()
     
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
         if bike.selectedValue == "Miles" {
             milesHoursSegmentedControl.selectedSegmentIndex = 1
 
@@ -198,7 +202,7 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
 
             self.mileageTextField.text = bike.currentHoursString
         }
-        print("\(self.bike) + this is the bike that is passed over.")
+//        print("\(self.bike) + this is the bike that is passed over.")
         //BikeData.sharedInstance.bike = self.bike
         //BikeData.sharedInstance.allBikes = self.bikes
         if bike.selectedValue == "Miles" && bike.currentMileageString != nil {
@@ -227,7 +231,10 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         navigationItem.leftBarButtonItem = cancelBarButton
         doneBarButton?.tintColor = .mainRed();
         cancelBarButton?.tintColor = .mainRed()
+   
         titleBar.addTitleBarAndLabel(page: view, initialTitle:"Enter Mileage", ypos: 0, color:.mainRed())
+        
+        print("NAVBAR \(topBarHeight)")
         
         view.addSubview(mileageTextView)
         view.addSubview(mileageTextField)
@@ -262,7 +269,7 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         self.mileageTextField.addTarget(self, action: #selector(didChangeText), for: .editingChanged)
         self.mileageTextField.addTarget(self, action: #selector(textFieldShouldReturn(_:)), for: .editingDidEnd)
         
-        self.mileageTextView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 120)
+        self.mileageTextView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 35, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 160)
         
          self.dottedLineView1.anchor(top: mileageTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
@@ -272,7 +279,7 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
         self.currentMileageLabel.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop:15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         
-        self.mileageTextField.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 200, height: 25 )
+        self.mileageTextField.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0 , height: 25 )
         
          self.dottedLineView2.anchor(top: mileageTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         

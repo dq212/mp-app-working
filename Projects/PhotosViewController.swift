@@ -159,6 +159,8 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         return notes
     }()
     
+    var topBarHeight: CGFloat = 0
+    
     let notesTitleBar: UIView = {
         let v = UIView()
         v.backgroundColor = .tableHeaderBG()
@@ -203,19 +205,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     var kbHeight: CGFloat!
 
     
-    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
-        let userInfo = notification.userInfo ?? [:]
-        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
-    
-        if !show {
-            let returnHeight = -64.0
-            kbHeight = CGFloat(returnHeight)
-        }
-        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
-        scrollView.setContentOffset(point, animated: true)
-        //scrollView.scrollRectToVisible(rect, animated: true)
-    }
+
     
     @objc func keyboardWillShow(_ notification: Notification) {
             trashBarButton.isEnabled = false
@@ -345,6 +335,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
+      topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
         imagePicker.navigationBar.tintColor = UIColor.mainRed()
         checkStatus()
         print("@@@@@@ \(projectIndexPath)")
@@ -487,9 +480,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         notesLabel.centerYAnchor.constraint(equalTo: notesTitleBar.centerYAnchor).isActive = true
         
         if  self.project.imagesArray != nil {
-            print("\(self.project.text) is the name of the project")
+//            print("\(self.project.text) is the name of the project")
             self.projectImages = self.project.imagesArray!
-            print(self.projectImages)
+//            print(self.projectImages)
             for i in 0..<self.projectImages.count {
                 projectImages[i].checked = false
             }
@@ -524,6 +517,20 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
 
         }
     
+    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = -topBarHeight
+            kbHeight = CGFloat(returnHeight)
+        }
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
+        //scrollView.scrollRectToVisible(rect, animated: true)
+    }
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
         print("this is hit")
         if textView.text.isEmpty || textView.text == "Notes:" {
@@ -538,7 +545,8 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     {
         if(text == "\n")
         {
-            view.endEditing(true)
+            //view.endEditing(true)
+            textView.text = textView.text + "\n"
             return false
         } else {
             return true
@@ -557,7 +565,6 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         updateBikes()
         
         //bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].notes = project.notes
-        
         //bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = project
         
         saveBikes()
@@ -568,11 +575,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             notesTextView.textColor = .black
         }
-       
     }
-    
-
-    
     
     func handleTrash() {
         if (selectedImagesArray.count > 0) {
@@ -584,7 +587,6 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: {(alertAction) in
                         //Do not delete photo
             self.resetSelections()
-            
                         alert.dismiss(animated: true, completion: nil)
                     }))
                     self.present(alert, animated: true, completion:nil)
@@ -595,7 +597,6 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
                         alert.dismiss(animated: true, completion: nil)
             }))
                 self.present(alert, animated: true, completion:nil)
-            
             }
         }
     
@@ -632,8 +633,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
                        // thumbnail = result!
                          imagesArray.add(result as Any)
                     })
-                    
-                }
+            }
               
 //                if let fetchResult: PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: stringArray, options: nil) {
 //                 if fetchResult.count > 0 {

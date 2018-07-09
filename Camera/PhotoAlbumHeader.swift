@@ -25,6 +25,8 @@ class PhotoAlbumHeader: UICollectionViewCell {
     var titleBar = TitleBar()
    // var imagesCache:DataCache?
     
+
+    
     
     var bike: FB_Bike? {
         didSet {

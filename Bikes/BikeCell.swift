@@ -22,6 +22,18 @@ class BikeCell: UITableViewCell {
         return iv
     }()
     
+    // first create UIImageView
+    let acc:UIImageView = {
+       // let img = UIImageView()
+       let img = UIImageView(frame:CGRect(x: 10, y: 10, width: 25, height: 12))
+           img.image = #imageLiteral(resourceName: "swipeArrows")
+        return img
+    }()
+    
+  
+    
+   
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -103,6 +115,8 @@ class BikeCell: UITableViewCell {
         addSubview(thumbNailImageView)
         addSubview(divider)
         addSubview(unitsLabel)
+        
+        self.accessoryView = acc
         
        // addSubview(divider2)
         thumbNailImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 15, paddingBottom: 10, paddingRight: 0, width: (frame.width / 3.5) , height: (frame.width / 3.5) )

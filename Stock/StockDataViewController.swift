@@ -67,9 +67,10 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.dataSource = self
         view.addSubview(tableView)
         
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
-        
-        titleBar.addTitleBarAndLabel(page: view, initialTitle: "STOCK DATA", ypos: 64)
+        titleBar.addTitleBarAndLabel(page: view, initialTitle: "STOCK DATA", ypos: topBarHeight)
         //let titleBar = addTitleBarAndLabel(page: view, title: "Projects", ypos: 64)
         tableView.anchor(top: view.topAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 100, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
@@ -131,8 +132,16 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
       
     }
     
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 30
+        return 40
+    }
+    
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return UITableViewAutomaticDimension
+        
     }
     
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

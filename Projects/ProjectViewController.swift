@@ -12,7 +12,7 @@ import FirebaseAuth
 import Firebase
 import Photos
 //import DataCache
-class ProjectViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,  AddProjectViewControllerDelegate, PhotosViewControllerDelegate, UITabBarControllerDelegate {
+class ProjectViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,  AddProjectViewControllerDelegate, PhotosViewControllerDelegate, UITabBarControllerDelegate, UIScrollViewDelegate {
     
     var cellId = "cellId"
     var tableView:UITableView = UITableView()
@@ -41,7 +41,12 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
     var projectIndexPath:IndexPath?
     var selectedIndexPath:IndexPath?
     
-
+    let scrollView:UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,7 +58,8 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         projectIndexPath = nil
-        
+        scrollView.delegate = self
+        scrollView.isUserInteractionEnabled = true
         tabBarController?.delegate = self
     
         self.selectedIndexPath = BikeData.sharedInstance.selectedIndexPath
@@ -74,10 +80,12 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
         
         view.addSubview(tableView)
         
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
         if let bn = bike.name {
-            titleBar.addTitleBarAndLabel(page: view, initialTitle: "PROJECTS for \(bn)", ypos: 64)
+            titleBar.addTitleBarAndLabel(page: view, initialTitle: "PROJECTS for \(bn)", ypos: topBarHeight)
         } else {
-            titleBar.addTitleBarAndLabel(page: view, initialTitle: "PROJECTS", ypos: 64)
+            titleBar.addTitleBarAndLabel(page: view, initialTitle: "PROJECTS", ypos: topBarHeight)
         }
         
         tableView.anchor(top: titleBar.headerTitleBar?.bottomAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
@@ -101,6 +109,16 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
             return view
         }()
         
+        let cmText:UITextView = {
+            let tv = UITextView()
+            tv.isEditable = false
+            tv.isSelectable = false
+            tv.font = UIFont(name: "Avenir-Medium", size: 16)
+            tv.textColor = UIColor.black
+            tv.text = "PROJECTS is where you'll be tracking the progress of your BIKE.\n\nTouch the “+” button in the upper right to get started.\n\nTitle your PROJECT, select a Category, add some Photos and Notes.\n\nTouch your PROJECT thumbnail to see the PROJECT DETAILS.\n\nSwipe left to edit from within the PROJECTS list.\n\n"
+            return tv
+        }()
+        
         
         
 //        let cmText:UITextView = {
@@ -114,29 +132,49 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
 //            return tv
 //        }()
         
-        let cmImg:UIImageView = {
-            let iv = UIImageView(image:#imageLiteral(resourceName: "cm_projects"))
-            iv.contentMode = .scaleAspectFit
-            return iv
-            
-        }()
+//        let cmImg:UIImageView = {
+//            let iv = UIImageView(image:#imageLiteral(resourceName: "cm_projects"))
+//            iv.contentMode = .scaleAspectFit
+//            return iv
+//
+//        }()
         
         let cmArrowImage:UIImageView = {
             let iv = UIImageView(image: #imageLiteral(resourceName: "curve_sign_small"))
             return iv
         }()
         
-        view.addSubview(cm)
+    
+        adjustUITextViewHeight(arg: cmText)
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(cm)
         cm.addSubview(cmBg)
-        cm.addSubview(cmImg)
-        cm.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 64, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
+        cmBg.addSubview(cmText)
+        //cm.addSubview(cmImg)
+        
+        let textHeightOffset = (cmText.frame.height + view.frame.height) - view.frame.height
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: topBarHeight, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        cm.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop:0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height + textHeightOffset )
+       // cm.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 64, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+      //  cmImg.anchor(top: cm.topAnchor, left: cm.leftAnchor, bottom: cm.bottomAnchor, right: cm.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:0)
         cm.addSubview(cmArrowImage)
         cmArrowImage.anchor(top: cm.topAnchor, left: nil, bottom: nil, right: cm.rightAnchor, paddingTop: 35, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
-        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 90, paddingRight: 10, width: 0, height: 0)
+       // cmBg.anchor(top: cmArrowImage.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 90, paddingRight: 10, width: 0, height: 0)
+        
+        cmBg.anchor(top: cmArrowImage.bottomAnchor, left: cm.leftAnchor, bottom: nil, right: cm.rightAnchor, paddingTop:10, paddingLeft: 10, paddingBottom:20, paddingRight: 10, width: 0, height: 0 )
+        
+        cmText.anchor(top: cmBg.topAnchor, left: cmBg.leftAnchor, bottom: cmBg.bottomAnchor, right: cmBg.rightAnchor, paddingTop: 20, paddingLeft: 15, paddingBottom: 0, paddingRight: 15, width: 0, height: 0)
+        
+        
+        let fixedWidth = cmText.frame.size.width
+        let newSize = cmText.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        cmText.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height + 10)
+        
         cmBg.dropShadow()
         
-        self.coachMark = cm
+        self.coachMark = scrollView
         coachMark?.isHidden = true
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Garage", style: .plain, target: self, action: #selector(cancelThisView))
@@ -168,6 +206,14 @@ class ProjectViewController: UIViewController, UITableViewDataSource, UITableVie
             coachMark?.isHidden = false
         }
     }
+    
+    func adjustUITextViewHeight(arg : UITextView)
+    {
+        arg.translatesAutoresizingMaskIntoConstraints = true
+        arg.sizeToFit()
+        arg.isScrollEnabled = false
+    }
+
     
 //    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
 //        //        let tabBarIndex = tabBarController.selectedIndex

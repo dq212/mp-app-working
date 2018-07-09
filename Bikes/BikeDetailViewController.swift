@@ -279,6 +279,7 @@ UITextFieldDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         drawDottedLines()
+
         
            // scrollView.contentSize = CGSize(width: self.view.bounds.width , height: 2000)
         scrollView.isUserInteractionEnabled = true
@@ -327,7 +328,10 @@ UITextFieldDelegate{
         mileageTextField.inputAccessoryView = toolBar
         mileageTextField.delegate = self
         
-        titleBar.addTitleBarAndLabel(page: view, initialTitle: "Add a Bike", ypos: 64, color:.mainRed())
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
+        titleBar.addTitleBarAndLabel(page: view, initialTitle: "Add a Bike", ypos: topBarHeight, color:.mainRed())
         
         doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         doneBarButton?.setTitleTextAttributes([ NSAttributedStringKey.font: UIFont(name: "Avenir-Medium", size: 18)!], for: UIControlState.normal)
@@ -345,7 +349,7 @@ UITextFieldDelegate{
         
        
         scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-         svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
+         svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height*1.25)
         stackView?.anchor(top: svContentView.topAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 35, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 30)
 
         self.selectLabel.anchor(top: stackView?.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight:20, width: 0, height: 0)

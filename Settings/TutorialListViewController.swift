@@ -71,10 +71,14 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
         tableView.register(TutorialListCell.self, forCellReuseIdentifier: cellId)
         view.addSubview(tableView)
         tableView.backgroundColor = UIColor.tableViewBgGray()
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
-        tableView.anchor(top: view.topAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 89, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        tableView.anchor(top: view.topAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: topBarHeight+25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        titleBar.addTitleBarAndLabel(page: view, initialTitle: "VIDEOS", ypos: 64)
+      
+        
+        titleBar.addTitleBarAndLabel(page: view, initialTitle: "VIDEOS", ypos: topBarHeight)
         
 
         //getVideos()
@@ -127,6 +131,13 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+       
+            return UITableViewAutomaticDimension
+     
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
