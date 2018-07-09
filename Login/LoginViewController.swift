@@ -13,7 +13,7 @@ import FirebaseDatabase
 import DataCache
 
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
     
     let userCache = DataCache(name: "userCache")
     var accepted = false
@@ -185,7 +185,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     let bgView: UIView = {
         let v = UIView()
-        v.backgroundColor = UIColor(white:0, alpha:0.8)
+       // v.backgroundColor = UIColor(white:0, alpha:0.8)
         return v
     }()
     
@@ -241,6 +241,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     return button
     }()
     
+    let scrollView:UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
+    var svContentView:UIView = {
+        let v = UIView()
+        return v
+    }()
+    
+    var stackView:UIStackView?
+    
+    
 
     let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
         // Print "OK Tapped" to the screen when the user taps OK
@@ -257,14 +271,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func checkLegal() {
         print("CHCECKING")
        if (UserDefaults.standard.bool(forKey: "hasAgreedToLegal") == false) {
-        view.addSubview(bgView)
-        bgView.addSubview(tcView)
-        tcView.addSubview(legalButton)
-        tcView.addSubview(disagreeButton)
-        tcView.addSubview(legalCopy)
-        tcView.addSubview(readLegalButton)
-        bgView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        tcView.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 200, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 300, height: 280)
+
+        bgView.anchor(top: svContentView.topAnchor, left: svContentView.leftAnchor, bottom: svContentView.bottomAnchor, right: svContentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        tcView.anchor(top: svContentView.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 200, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 300, height: 280)
         tcView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
         legalCopy.anchor(top: tcView.topAnchor, left: tcView.leftAnchor, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 240, height: 200)
@@ -282,9 +291,50 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = -50
+            kbHeight = CGFloat(returnHeight)
+        }
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
+        //scrollView.scrollRectToVisible(rect, animated: true)
+    }
+    
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        adjustInsetForKeyboardShow(true, notification: notification)
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        adjustInsetForKeyboardShow(false, notification: notification)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: Notification.Name.UIKeyboardWillShow,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: Notification.Name.UIKeyboardWillHide,
+            object: nil
+        )
+        
+        
+        stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signInButton])
+        scrollView.delegate = self
+        scrollView.isUserInteractionEnabled = true
         self.passwordTextField.addTarget(self, action: #selector(textFieldShouldReturn(_:)), for: .editingDidEnd)
         self.emailTextField.addTarget(self, action: #selector(textFieldShouldReturn(_:)), for: .editingDidEnd)
         
@@ -295,16 +345,44 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         navigationController?.isNavigationBarHidden = true
         //view.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
 //
-        view.addSubview(logoButton)
         handleSignUp()
 
         registerDefaults()
 
-        logoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:180, height: 180)
+        view.addSubview(scrollView)
+        scrollView.addSubview(svContentView)
+        svContentView.addSubview(bgView)
+        bgView.addSubview(tcView)
+        tcView.addSubview(legalButton)
+        tcView.addSubview(disagreeButton)
+        tcView.addSubview(legalCopy)
+        tcView.addSubview(readLegalButton)
         
+        
+        svContentView.addSubview(gotoRegisterButton)
+        svContentView.addSubview(forgotPasswordButton)
+        
+        svContentView.addSubview(logoButton)
+        
+        
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop:0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height*1.25)
+        
+        stackView?.distribution = .fillEqually
+        stackView?.axis = .vertical
+        stackView?.spacing = 10
+        svContentView.addSubview(stackView!)
+        
+        stackView?.anchor(top: logoButton.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 0, height: 120)
+        svContentView.addSubview(stackView!)
+        gotoRegisterButton.anchor(top: stackView?.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        forgotPasswordButton.anchor(top: gotoRegisterButton.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        logoButton.anchor(top: svContentView.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:180, height: 180)
         logoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
-        setupInputFields()
+        //setupInputFields()
         
         checkLegal()
     }
@@ -316,21 +394,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     fileprivate func setupInputFields() {
         
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signInButton])
-        
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        
-        view.addSubview(stackView)
-        view.addSubview(gotoRegisterButton)
-        view.addSubview(forgotPasswordButton)
-    
-        stackView.anchor(top: logoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 0, height: 120)
-        view.addSubview(stackView)
-        
-        gotoRegisterButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        forgotPasswordButton.anchor(top: gotoRegisterButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+     
     }
     
    

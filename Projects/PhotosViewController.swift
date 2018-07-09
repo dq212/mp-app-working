@@ -151,6 +151,11 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
             return CGSize(width: width, height: width)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+    }
+    
     let notesTextView: UITextView = {
         let notes = UITextView()
         notes.textColor = .black
@@ -289,7 +294,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         //saveBikes()
         print("ALL THE IMAGES...\(projectImages)")
         print("THE SELECTED IMAGES ...\(selectedImagesArray)")
-        //filter and keep non-selected items and reload
+        //filter and keep non-selected items and reloadke
         projectImages = projectImages.filter({!$0.checked!})
         print("ALL THE IMAGES --- AFTER THE FILTER...\(projectImages)")
 //        bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].imagesArray = projectImages
@@ -466,7 +471,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         bottomDividerView.anchor(top: notesTitleBar.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
 //
         svContentView.addSubview(notesTextView)
-        notesTextView.anchor(top: notesTitleBar.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 10, paddingBottom: -4, paddingRight: 10, width: 0, height: (view.frame.height / 5) * 1.25)
+        notesTextView.anchor(top: notesTitleBar.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 10, paddingBottom: -4, paddingRight: 10, width: 0, height: 60)
     
 //
 //        if (project.notes != nil) {
@@ -520,7 +525,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
         let userInfo = notification.userInfo ?? [:]
         let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
+        var kbHeight = (keyboardFrame.height + 50) * (show ? 1 : -1)
         
         if !show {
             let returnHeight = -topBarHeight
@@ -563,6 +568,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     
         project.notes = notesTextView.text
         updateBikes()
+        self.notesTextView.scrollRangeToVisible(NSMakeRange(0, 0))
         
         //bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!].notes = project.notes
         //bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!].projects?[(projectIndexPath?.row)!] = project
