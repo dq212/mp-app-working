@@ -97,6 +97,8 @@ UITextFieldDelegate{
     
     var isConnected:Bool?
     var uid:String?
+    
+    var activeTextField = UITextField()
 
     var imageView:UIImageView = {
         let iv = UIImageView()
@@ -119,6 +121,8 @@ UITextFieldDelegate{
         return sv
     }()
     
+    var topBarHeight: CGFloat = 0
+    
     
     
     func showThumb(imageName: String, bike:FB_Bike) {
@@ -127,10 +131,7 @@ UITextFieldDelegate{
             let helper = MRPhotosHelper()
             if let identifier = bike.imageName {
                 helper.retrieveImageWithIdentifer(localIdentifier: identifier, completion: { (image) -> Void in
-                 
                          self.imageView.image = image
-                 
-                   
                 })
             }
         } else {
@@ -276,10 +277,36 @@ UITextFieldDelegate{
         checkMyConnection()
     }
  
+    @objc func keyboardWillShow(_ notification: Notification) {
+        adjustInsetForKeyboardShow(true, notification: notification)
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        adjustInsetForKeyboardShow(false, notification: notification)
+    }
+    
+    // Assign the newly active text field to your activeTextField variable
+ 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         drawDottedLines()
 
+        self.topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: Notification.Name.UIKeyboardWillShow,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: Notification.Name.UIKeyboardWillHide,
+            object: nil
+        )
         
            // scrollView.contentSize = CGSize(width: self.view.bounds.width , height: 2000)
         scrollView.isUserInteractionEnabled = true
@@ -328,8 +355,7 @@ UITextFieldDelegate{
         mileageTextField.inputAccessoryView = toolBar
         mileageTextField.delegate = self
         
-        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
-            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
         
         titleBar.addTitleBarAndLabel(page: view, initialTitle: "Add a Bike", ypos: topBarHeight, color:.mainRed())
         
@@ -391,16 +417,18 @@ UITextFieldDelegate{
         self.nameTextField.delegate = self
         self.nameTextField.addTarget(self, action: #selector(didChangeText), for: .editingChanged)
         self.nameTextField.addTarget(self, action: #selector(textFieldShouldReturn(_:)), for: .editingDidEnd)
+        self.nameTextField.addTarget(self, action: #selector(textFieldDidEndEditing(_:)), for: .editingDidBegin)
+        self.mileageTextField.addTarget(self, action: #selector(textFieldDidEndEditing(_:)), for: .editingDidBegin)
         
         checkStatus()
        // initializeView()
         //checkConnection()
-        
         //self.getMakes()
         //fetchUser()
         //listenForBackgroundNotification()
     }
     
+
     @objc func doneClicked(){
         print("clicked it \(mileageTextField.text)" )
         self.currentMileage = mileageTextField.text!
@@ -420,6 +448,28 @@ UITextFieldDelegate{
             view.endEditing(true)
         }
     }
+    
+    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+        
+        if activeTextField == nameTextField {
+            return
+        } else {
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var kbHeight = (keyboardFrame.height - 60) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = -64
+            kbHeight = CGFloat(returnHeight)
+        }
+        
+   
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
+        }
+        
+    }
+    
     
     func drawDottedLines() {
         //layer dashed line
@@ -540,6 +590,11 @@ UITextFieldDelegate{
         //nameTextField.resignFirstResponder()
         self.view.endEditing(true)
         return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.activeTextField = textField
+        print("\(self.activeTextField) is the active text field")
     }
     
     @objc func didChangeText(textField:UITextField) {

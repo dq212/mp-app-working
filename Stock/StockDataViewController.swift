@@ -113,7 +113,7 @@ class StockDataViewController: UIViewController, UITableViewDelegate, UITableVie
         //alert.view.tintColor = UIColor.mainRed()
         alert.addAction(UIAlertAction(title: "I agree and understand.", style: .destructive, handler: {(alertAction) in
             UserDefaults.standard.set(true, forKey: "hasAgreedToStockData")
-           // self.checkData()
+            self.checkData()
             alert.dismiss(animated: true, completion: nil)
         }))
         alert.view.tintColor = UIColor.black

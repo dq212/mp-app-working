@@ -22,6 +22,8 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     var photosArray = [String]()
     
+    
+    
     var assetCollection:PHAssetCollection = PHAssetCollection()
     var photosAsset:PHFetchResult<PHAsset>?
     var albumFound:Bool = false
@@ -434,9 +436,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
 
         scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
         
-        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
+        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height*1.8)
                 
-        //view.backgroundColor = UIColor.tableViewBgGray()
+        view.backgroundColor = UIColor.tableViewBgGray()
         
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: self.svContentView.frame, collectionViewLayout: layout)
@@ -471,7 +473,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         bottomDividerView.anchor(top: notesTitleBar.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
 //
         svContentView.addSubview(notesTextView)
-        notesTextView.anchor(top: notesTitleBar.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 10, paddingBottom: -4, paddingRight: 10, width: 0, height: 60)
+        notesTextView.anchor(top: notesTitleBar.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 10, paddingBottom: 80, paddingRight: 10, width: 0, height: 200)
+        
+    
     
 //
 //        if (project.notes != nil) {
@@ -479,7 +483,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
 //        }
 //
      //   print(self.notesTextView.text)
-        print("\(project) ))))))))))))))))))))))))))))))))))))))))))))))))))))))")
+//        print("\(project) ))))))))))))))))))))))))))))))))))))))))))))))))))))))")
      //   print(project.notes)
         
         notesLabel.centerYAnchor.constraint(equalTo: notesTitleBar.centerYAnchor).isActive = true
@@ -525,7 +529,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
         let userInfo = notification.userInfo ?? [:]
         let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        var kbHeight = (keyboardFrame.height + 50) * (show ? 1 : -1)
+        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
         
         if !show {
             let returnHeight = -topBarHeight
@@ -550,9 +554,9 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     {
         if(text == "\n")
         {
-            //view.endEditing(true)
-            textView.text = textView.text + "\n"
-            return false
+        //view.endEditing(true)
+          // textView.text = textView.text + "\n"
+            return true
         } else {
             return true
         }

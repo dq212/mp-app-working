@@ -28,7 +28,6 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
     var categoryArray = [String]()
     var videoTextArray = [[FB_Video]]()
     var dict = [String:[FB_Video]]()
-
     
     var videos = [FB_Video]()
     
@@ -125,7 +124,7 @@ class TutorialListViewController: UIViewController, UITableViewDelegate, UITable
         let header = view as! UITableViewHeaderFooterView
         header.textLabel?.font = UIFont(name: "Avenir-Medium", size: 12)
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 20))
-        headerView.backgroundColor = .tableHeaderBG()
+        headerView.backgroundColor = .tableHeaderBGLight()
         header.backgroundView = headerView
     }
     

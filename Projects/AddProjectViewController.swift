@@ -62,6 +62,7 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
     
     var selectedImageFromPicker:UIImage?
     
+    
     var observer: Any!
     // MARK: - Photos
     var assetCollection: PHAssetCollection!
@@ -94,28 +95,21 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         return iv
     }()
     
+    var activeTextField = UITextField()
+    var inActiveTextField = UITextField()
+    
     var kbHeight: CGFloat!
     //
-    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
-        let userInfo = notification.userInfo ?? [:]
-        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
-        
-        if !show {
-            let returnHeight = -64.0
-            kbHeight = CGFloat(returnHeight)
-        }
-        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
-        scrollView.setContentOffset(point, animated: true)
-    }
-    
-    func keyboardWillShow(_ notification: Notification) {
+ 
+    @objc func keyboardWillShow(_ notification: Notification) {
         adjustInsetForKeyboardShow(true, notification: notification)
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         adjustInsetForKeyboardShow(false, notification: notification)
     }
+    
+    
 
     let topDividerView: UIView = {
         let view = UIView()
@@ -169,6 +163,8 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         return label
     }()
     
+    var topBarHeight: CGFloat = 0
+    
     let notesTextView:UITextView = {
         let tf = UITextView()
         tf.textAlignment = .left
@@ -214,13 +210,29 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+         self.topBarHeight = UIApplication.shared.statusBarFrame.size.height +
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
         selectedIndexPath = BikeData.sharedInstance.selectedIndexPath
         notesTextView.text = "Notes:"
+        
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: Notification.Name.UIKeyboardWillShow,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: Notification.Name.UIKeyboardWillHide,
+            object: nil
+        )
+        
         print("VIEW DID LOAD PROJECT INDEX PATH \(projectIndexPath)")
         notesTextView.target(forAction: #selector(textViewDidBeginEditing(_:)), withSender: nil)
         notesTextView.target(forAction: #selector(textViewDidEndEditing(_:)), withSender: nil)
+  
         
         scrollView.isUserInteractionEnabled = true
         
@@ -233,7 +245,7 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         
         scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: topBarHeight + 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
         
-        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
+        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height * 1.25)
         
         svContentView.addSubview(pickerView)
         
@@ -325,6 +337,7 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         self.nameTextField.returnKeyType = .done
         self.nameTextField.addTarget(self, action: #selector(didChangeText), for: .editingChanged)
         self.nameTextField.addTarget(self, action: #selector(textFieldShouldReturn(_:)), for: .editingDidEnd)
+        self.nameTextField.addTarget(self, action: #selector(textFieldDidBeginEditing(_:)), for: .editingDidBegin)
         
         self.notesTextView.returnKeyType = .default
         self.notesTextView.target(forAction: #selector(textViewDidChange(_:)), withSender: self)
@@ -389,7 +402,27 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         }
     }
     
+    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+        if activeTextField == nameTextField {
+            print("my text field name is \(activeTextField)")
+             activeTextField = inActiveTextField
+            return
+        }
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var kbHeight = (keyboardFrame.height - 60) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = 0
+            kbHeight = CGFloat(returnHeight)
+        }
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
+    }
+    
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
+       
         doneBarButton?.isEnabled = false
         print("this is hit")
         if textView.text.isEmpty || textView.text == "Notes:" {
@@ -398,7 +431,13 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
       }
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        print("my text field name is \(textField)")
+         activeTextField = textField
+    }
+    
     func textViewDidEndEditing(_ textView: UITextView) {
+   
         if let txt = self.nameTextField.text {
             print("this is hit too, when done")
             let newText = txt as NSString
@@ -406,6 +445,7 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         }
     }
     
+
     @objc func doneClicked(){
         
         print("done clicked here")
@@ -415,6 +455,7 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
            // bikes[(BikeData.sharedInstance.selectedIndexPath?.row)!] = bike
             saveBikes()
             print("got here")
+             self.notesTextView.scrollRangeToVisible(NSMakeRange(0, 0))
             view.endEditing(true)
         }
         else {
@@ -437,8 +478,8 @@ class AddProjectViewController: UIViewController, UITextFieldDelegate, UIPickerV
         if(text == "\n")
         {
             //view.endEditing(true)
-            textView.text = textView.text + "\n"
-            return false
+           // textView.text = textView.text + "\n"
+            return true
         } else {
             return true
         }

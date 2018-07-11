@@ -240,6 +240,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
     var selectedNumInt = 0
     var observer: Any!
     
+    var topBarHeight:CGFloat = 0
+    
     //
     
     var numValues = [String]()
@@ -306,10 +308,23 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
     func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
         let userInfo = notification.userInfo ?? [:]
         let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        let adjustmentHeight = (keyboardFrame.height+50) * (show ? 1 : -1)
-        scrollView.contentInset.bottom += adjustmentHeight
-        scrollView.scrollIndicatorInsets.bottom += adjustmentHeight 
+        var kbHeight = ((keyboardFrame.height) - 120) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = 0
+            kbHeight = CGFloat(returnHeight)
+        }
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
     }
+    
+//    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+//        let userInfo = notification.userInfo ?? [:]
+//        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+//        let adjustmentHeight = (keyboardFrame.height+50) * (show ? 1 : -1)
+//        scrollView.contentInset.bottom += adjustmentHeight
+//        scrollView.scrollIndicatorInsets.bottom += adjustmentHeight
+//    }
     
     @objc func keyboardWillShow(_ notification: Notification) {
         adjustInsetForKeyboardShow(true, notification: notification)
@@ -330,6 +345,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
 //            view.endEditing(true)
 //        }
 //        else {
+        
+         self.notesTextView.scrollRangeToVisible(NSMakeRange(0, 0))
             notesTextView.endEditing(true)
             view.endEditing(true)
         if notesTextView.text.isEmpty {
@@ -340,6 +357,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         }
        //}
     }
+    
+
 //
     
 //    @objc func doneClicked(){
@@ -511,10 +530,10 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         
         svContentView.addSubview(self.selectedCategoryLabel)
         
-        let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
+         topBarHeight = UIApplication.shared.statusBarFrame.size.height +
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
        
-        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:topBarHeight + 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:view.frame.height + 120)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:topBarHeight + 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:view.frame.height * 1.25)
         
         view.backgroundColor = .white
         scrollView.addSubview(pickerView)
@@ -560,6 +579,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         numberPicker.backgroundColor = UIColor.mainRed()
         numberPicker.setValue(UIColor.white, forKeyPath: "textColor")
         numberPicker.setValue(1.0, forKeyPath: "alpha")
+        
+    
       
 //        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop:90, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width:0, height:0)
         
@@ -573,7 +594,7 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         
         pickerView.anchor(top: categoryLabel.topAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 80)
         
-          self.notesTextView.anchor(top: pickerView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 25, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+          self.notesTextView.anchor(top: pickerView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
         
         self.dottedLineView1.anchor(top: notesTextView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
@@ -599,7 +620,7 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         self.setReminderLabel.anchor(top: dottedLineView2.bottomAnchor, left: nil, bottom: nil, right: shouldRemindSwitch.leftAnchor, paddingTop: 30, paddingLeft: 0, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
         self.setReminderLabel.centerYAnchor.constraint(equalTo: shouldRemindSwitch.centerYAnchor).isActive = true
         
-        numberPicker.anchor(top: setReminderLabel.bottomAnchor, left: svContentView.leftAnchor, bottom: svContentView.bottomAnchor, right: svContentView.rightAnchor, paddingTop: 22, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        numberPicker.anchor(top: setReminderLabel.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 22, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height:120)
         
         shouldRemindSwitch.addTarget(self, action: #selector(switchChanged(_ :)), for: .valueChanged)
         
@@ -628,6 +649,7 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         
         numberPicker.isHidden = true
         
+        
         if let item = taskToEdit {
             self.titleBar.updateTitle(newTitle:"Edit Maintenance Item")
             
@@ -647,6 +669,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
             
             if item.shouldRemind == true {
                     numberPicker.isHidden = false
+        
+             
             } else {
                 numberPicker.isHidden = true
                 item.reminderNumber = 100
@@ -754,8 +778,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         if(text == "\n")
         {
            // view.endEditing(true)
-            textView.text = textView.text + "\n"
-            return false
+           // textView.text = textView.text + "\n"
+            return true
         } else {
             return true
         }
@@ -812,7 +836,15 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
    
     @objc func switchChanged(_ switch: UISwitch) -> Bool {
         setReminderLabel.isHidden = !shouldRemindSwitch.isOn
-        
+        if shouldRemindSwitch.isOn {
+        var bottomOffset = CGPoint(x:0, y: self.pickerView.frame.height + 80)
+        // var bottomOffset = CGPointMake(0, self.scrollView.contentSize.height - self.scrollView.bounds.size.height)
+        self.scrollView.setContentOffset(bottomOffset, animated: true)
+        }else {
+            var bottomOffset = CGPoint(x:0, y: 0)
+            // var bottomOffset = CGPointMake(0, self.scrollView.contentSize.height - self.scrollView.bounds.size.height)
+            self.scrollView.setContentOffset(bottomOffset, animated: true)
+        }
 //        toggleMilesHours(sender: milesHoursSegmentedControl)
        // numberPicker.isHidden = !shouldRemindSwitch.isOn
         return setReminderLabel.isHidden
@@ -1015,6 +1047,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
         }
     }
     
+    
+    
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = view as! UILabel?
             if label == nil {
@@ -1067,6 +1101,8 @@ class MaintenanceDetailViewController: UIViewController, UITextViewDelegate, UIP
                 return categories.count
         }
     }
+    
+ 
     
     func getEntryDateLabel(date:NSDate) ->String {
         let formatter = DateFormatter()

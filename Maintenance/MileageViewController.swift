@@ -43,6 +43,18 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
     
     weak var delegate: MileageViewControllerDelegate?
     
+    let scrollView:UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
+    var svContentView:UIView = {
+        let v = UIView()
+        return v
+    }()
+    
+    
     let hoursMilesLabel:UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -190,6 +202,21 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: Notification.Name.UIKeyboardWillShow,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: Notification.Name.UIKeyboardWillHide,
+            object: nil
+        )
+        
+        
         let topBarHeight = UIApplication.shared.statusBarFrame.size.height +
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
@@ -236,8 +263,10 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
         print("NAVBAR \(topBarHeight)")
         
-        view.addSubview(mileageTextView)
-        view.addSubview(mileageTextField)
+        view.addSubview(scrollView)
+        scrollView.addSubview(svContentView)
+        svContentView.addSubview(mileageTextView)
+        svContentView.addSubview(mileageTextField)
         
         milesHoursSegmentedControl.addTarget(self, action: #selector(toggleMilesHours), for: .valueChanged)
         
@@ -253,15 +282,15 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
         
     
-        view.addSubview(dottedLineView1)
-        view.addSubview(dottedLineView2)
-        view.addSubview(self.currentMileageLabel)
-        view.addSubview(milesHoursSegmentedControl)
-        view.addSubview(hoursMilesLabel)
-        view.addSubview(mileageTextField)
+        svContentView.addSubview(dottedLineView1)
+        svContentView.addSubview(dottedLineView2)
+        svContentView.addSubview(self.currentMileageLabel)
+        svContentView.addSubview(milesHoursSegmentedControl)
+        svContentView.addSubview(hoursMilesLabel)
+        svContentView.addSubview(mileageTextField)
         
         
-        
+         titleBar.addTitleBarAndLabel(page: view, initialTitle:"Enter Mileage", ypos: 0, color:.mainRed())
        
         mileageTextField.returnKeyType = .done
         self.mileageTextField.delegate = self
@@ -269,19 +298,22 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         self.mileageTextField.addTarget(self, action: #selector(didChangeText), for: .editingChanged)
         self.mileageTextField.addTarget(self, action: #selector(textFieldShouldReturn(_:)), for: .editingDidEnd)
         
-        self.mileageTextView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 35, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 160)
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor,bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height*1.25)
         
-         self.dottedLineView1.anchor(top: mileageTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
+        self.mileageTextView.anchor(top: svContentView.topAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 35, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 160)
+        
+         self.dottedLineView1.anchor(top: mileageTextView.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
 //        self.topDividerView.anchor(top: mileageTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
-        self.milesHoursSegmentedControl.anchor(top: dottedLineView1.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        self.milesHoursSegmentedControl.anchor(top: dottedLineView1.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         
-        self.currentMileageLabel.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop:15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        self.currentMileageLabel.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: nil, paddingTop:15, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         
         self.mileageTextField.anchor(top: milesHoursSegmentedControl.bottomAnchor, left: currentMileageLabel.rightAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0 , height: 25 )
         
-         self.dottedLineView2.anchor(top: mileageTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
+         self.dottedLineView2.anchor(top: mileageTextField.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: svContentView.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: 0.5)
         
 
         
@@ -303,6 +335,28 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         
         drawDottedLines()
     }
+    
+    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var kbHeight = (keyboardFrame.height - 80) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = 0
+            kbHeight = CGFloat(returnHeight)
+        }
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        adjustInsetForKeyboardShow(true, notification: notification)
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        adjustInsetForKeyboardShow(false, notification: notification)
+    }
+    
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return self.numValues[row]
@@ -416,6 +470,8 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
         return 0
     }
     
+
+    
     @objc func cancel() {
         print("cancelling")
         delegate?.mileageViewControllerDidCancel(self)
@@ -446,21 +502,7 @@ class MileageViewController: UIViewController, UITextFieldDelegate, UIPickerView
             self.setReminderLabel.text = "Set for: \(self.selectedNumber) \(self.valueType)"
     }
     
-    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
-        let userInfo = notification.userInfo ?? [:]
-        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        _ = (keyboardFrame.height+50) * (show ? 1 : -1)
-        //view.contentInset.bottom += adjustmentHeight
-        //view.scrollIndicatorInsets.bottom += adjustmentHeight
-    }
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        adjustInsetForKeyboardShow(true, notification: notification)
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-        adjustInsetForKeyboardShow(false, notification: notification)
-    }
+
     
     @objc func doneClicked(){
         print("done clicked")

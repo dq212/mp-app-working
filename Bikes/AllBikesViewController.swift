@@ -371,7 +371,12 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
             let navController = UINavigationController(rootViewController: contactController)
             self.present(navController, animated:true, completion:nil)
         }))
-        alertController.addAction(UIAlertAction(title: "Backup/Restore your data", style: .default, handler: { (_) in
+        alertController.addAction(UIAlertAction(title: "General Information", style: .default, handler: { (_) in
+            let infoViewController = InfoViewController()
+            let navController = UINavigationController(rootViewController: infoViewController)
+            self.present(navController, animated:true, completion:nil)
+        }))
+        alertController.addAction(UIAlertAction(title: "Backup/Restore your Data", style: .default, handler: { (_) in
             let backupController = BackupViewController()
             let navController = UINavigationController(rootViewController: backupController)
             self.present(navController, animated:true, completion:nil)
@@ -419,7 +424,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
 //    }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 140
+        return 150
     }
 
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -437,6 +442,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let bike = bikes[indexPath.row]
         self.selectedIndexPath = indexPath
+        
         BikeData.sharedInstance.selectedIndexPath = indexPath
         BikeData.sharedInstance.bike = self.currentBike
         let mainTabBarController = MainTabBarController()
@@ -547,8 +553,11 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         guard let cell = cell as? BikeCell else {
             return
         }
-        cell.selectionStyle = .none
+           DispatchQueue.main.async {
+                 cell.selectionStyle = .none
+            }
         
+        //cell.selectionStyle = UITableViewCellSelectionStyle.default
         let bike = bikes[indexPath.row]
         cell.indexPath = indexPath
         cell.makeLabel.text = bike.make

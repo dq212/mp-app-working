@@ -238,6 +238,11 @@ extension UIColor {
         return UIColor.rgb(r: 75 , g: 75, b: 75)
     }
     
+    static func tableHeaderBGLight() -> UIColor {
+        return UIColor.rgb(r: 100 , g: 100, b: 100)
+    }
+    
+    
     static func coachTipGray() -> UIColor {
         return UIColor.rgb(r: 100 , g: 100, b: 100)
     }

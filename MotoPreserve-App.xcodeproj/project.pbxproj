@@ -12,6 +12,7 @@
 		3D014CBD1FCA514100D76EE1 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D014CBC1FCA514100D76EE1 /* VideoPlayerViewController.swift */; };
 		3D014CBF1FCC2EC900D76EE1 /* RefreshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D014CBE1FCC2EC900D76EE1 /* RefreshViewController.swift */; };
 		3D1701BF1FA0D97800C046E0 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1701BE1FA0D97800C046E0 /* MainTabBarController.swift */; };
+		3D19B8B820F3E778006E58A8 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D19B8B720F3E778006E58A8 /* InfoViewController.swift */; };
 		3D33A8741FF409CD00C98959 /* MileageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33A8731FF409CD00C98959 /* MileageViewController.swift */; };
 		3D4D257B1F9BB39A00AEBC9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4D257A1F9BB39A00AEBC9E /* AppDelegate.swift */; };
 		3D4D25851F9BB39A00AEBC9E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D4D25831F9BB39A00AEBC9E /* LaunchScreen.storyboard */; };
@@ -66,6 +67,7 @@
 		3D014CBC1FCA514100D76EE1 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		3D014CBE1FCC2EC900D76EE1 /* RefreshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshViewController.swift; sourceTree = "<group>"; };
 		3D1701BE1FA0D97800C046E0 /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		3D19B8B720F3E778006E58A8 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		3D33A8731FF409CD00C98959 /* MileageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MileageViewController.swift; sourceTree = "<group>"; };
 		3D4D25771F9BB39A00AEBC9E /* MotoPreserve-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MotoPreserve-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D4D257A1F9BB39A00AEBC9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 				3D014CBE1FCC2EC900D76EE1 /* RefreshViewController.swift */,
 				3D91282D1FD6B95A0096851A /* FB_Video.swift */,
 				3DE9D795207B8AAB00BBCCF4 /* LegalViewController.swift */,
+				3D19B8B720F3E778006E58A8 /* InfoViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				3D5333DD1FC2FA6300C5DED0 /* InstagramManager.swift in Sources */,
 				3D674E821F9CB57300211E7D /* FB_Bike.swift in Sources */,
 				3D674E981F9CB63500211E7D /* PhotoAlbumHeader.swift in Sources */,
+				3D19B8B820F3E778006E58A8 /* InfoViewController.swift in Sources */,
 				3D674E8A1F9CB57300211E7D /* StockCell.swift in Sources */,
 				3D674E7A1F9CB57300211E7D /* BikeCell.swift in Sources */,
 				3D674E6C1F9CB57300211E7D /* ProjectCell.swift in Sources */,
