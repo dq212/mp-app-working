@@ -36,6 +36,8 @@ UITextFieldDelegate{
     
     let dottedLineView1 = UIView()
     let dottedLineView2 = UIView()
+    
+    
 
     var appAlbumName:String = "MotoPreserve"
     var collectionList:PHCollectionList?

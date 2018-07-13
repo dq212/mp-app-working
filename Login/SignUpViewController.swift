@@ -12,7 +12,7 @@ import FirebaseDatabase
 import Firebase
 import CoreData
 
-class SignUpViewController: UIViewController {
+class SignUpViewController: UIViewController, UIScrollViewDelegate {
     
     //logoButton
     let logoButton: UIButton = {
@@ -21,18 +21,34 @@ class SignUpViewController: UIViewController {
         return button
     }()
     
+   
+    
+    let scrollView:UIScrollView = {
+        let sv = UIScrollView()
+        sv.clipsToBounds = true
+        return sv
+    }()
+    
+    var svContentView:UIView = {
+        let v = UIView()
+        return v
+    }()
+    
     let emailTextField: UITextField = {
         let tf = UITextField()
         tf.autocapitalizationType = .none
         tf.placeholder = "Email"
-         tf.backgroundColor = UIColor(white: 0, alpha:0.03)
+        tf.backgroundColor = UIColor(white: 0, alpha:0.03)
         tf.borderStyle = .roundedRect
-        tf.font = UIFont.systemFont(ofSize: 12)
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.font = UIFont.systemFont(ofSize: 14)
         tf.keyboardType = UIKeyboardType.emailAddress
+        tf.returnKeyType = .done
         tf.keyboardAppearance = .dark
+        // tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
+    
+    var stackView = UIStackView()
     
     @objc func handleTextInputChange() {
         let isFormValid = emailTextField.text?.count ?? 0 > 0 &&
@@ -49,6 +65,7 @@ class SignUpViewController: UIViewController {
     
     let passwordTextField: UITextField = {
         let tf = UITextField()
+        tf.autocapitalizationType = .none
         tf.placeholder = "Password"
         tf.backgroundColor = UIColor(white: 0, alpha:0.03)
         tf.borderStyle = .roundedRect
@@ -56,6 +73,7 @@ class SignUpViewController: UIViewController {
         tf.font = UIFont.systemFont(ofSize: 12)
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         tf.keyboardAppearance = .dark
+        tf.returnKeyType = .done
         return tf
     }()
     
@@ -92,6 +110,29 @@ class SignUpViewController: UIViewController {
         navigationController?.popViewController(animated: true)
         // present(signupController, animated: true, completion: nil)
         //performSegue(withIdentifier: "GoToRegister", sender: nil)
+    }
+    
+    func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
+        let userInfo = notification.userInfo ?? [:]
+        let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        var kbHeight = (keyboardFrame.height - 60) * (show ? 1 : -1)
+        
+        if !show {
+            let returnHeight = 0
+            kbHeight = CGFloat(returnHeight)
+        }
+        let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
+        scrollView.setContentOffset(point, animated: true)
+        //scrollView.scrollRectToVisible(rect, animated: true)
+    }
+    
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        adjustInsetForKeyboardShow(true, notification: notification)
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        adjustInsetForKeyboardShow(false, notification: notification)
     }
 
     
@@ -130,34 +171,59 @@ class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = self
+        scrollView.isUserInteractionEnabled = true
+        stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, createAccountButton])
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: Notification.Name.UIKeyboardWillShow,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: Notification.Name.UIKeyboardWillHide,
+            object: nil
+        )
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(svContentView)
+        svContentView.addSubview(stackView)
+        svContentView.addSubview(logoButton)
         
         view.backgroundColor = .white
-        view.addSubview(logoButton)
+        svContentView.addSubview(logoButton)
         
-        logoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 180, height: 180)
-
+        logoButton.anchor(top: svContentView.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 180, height: 180)
+       
         logoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        setupInputFields()
+        
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        
+        view.addSubview(stackView)
+        view.addSubview(alreadyRegisteredButton)
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        svContentView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop:0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height*1.25)
+        
+        stackView.anchor(top: logoButton.bottomAnchor, left: svContentView.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 0, height: 120)
+        view.addSubview(stackView)
+        
+        alreadyRegisteredButton.anchor(top: stackView.bottomAnchor, left: stackView.leftAnchor, bottom: nil, right: stackView.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        //setupInputFields()
         
         //createAccountButton.layer.cornerRadius = 5
     }
     
     fileprivate func setupInputFields() {
         
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, createAccountButton])
+       
         
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        stackView.spacing = 10  
-        
-        view.addSubview(stackView)
-        view.addSubview(alreadyRegisteredButton)
-        
-        
-        stackView.anchor(top: logoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 70, paddingBottom: 0, paddingRight: 70, width: 0, height: 120)
-        view.addSubview(stackView)
-        
-        alreadyRegisteredButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+       
     }
     
     

@@ -22,6 +22,8 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
     var addBikeButton: UIBarButtonItem!
     let cellId = "cellId"
     
+    var c:UITableViewCell?
+    
     let userCache = DataCache(name: "userCache")
     let makeModelYearCache = DataCache(name: "makeModelYearCache")
     let userBikesCache = DataCache(name: "userBikesCache")
@@ -75,7 +77,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddBike))
         
         //Mark: load any user bikes
-        view.backgroundColor = UIColor.tableViewBgGray()
+        //view.backgroundColor = UIColor.tableViewBgGray()
 
         tableView = UITableView()
         tableView.separatorStyle = .none
@@ -83,7 +85,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.dataSource = self
         tableView.register(BikeCell.self, forCellReuseIdentifier: cellId)
         view.addSubview(tableView)
-        tableView.backgroundColor = UIColor.tableViewBgGray()
+      //  tableView.backgroundColor = UIColor.tableViewBgGray()
         tableView.setContentOffset(CGPoint.zero, animated: true)
     
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo_2"))
@@ -93,7 +95,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         
         titleBar.addTitleBarAndLabel(page: view, initialTitle: "GARAGE", ypos: 0, color:.black)
         
-        tableView.anchor(top: titleBar.newPage?.topAnchor , left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         let cm:UIView = {
             let view = UIView()
@@ -424,7 +426,8 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
 //    }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+     
+        return 380
     }
 
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -434,7 +437,6 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
     
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        
         configure(cell: cell, for: indexPath)
         return cell
     }
@@ -523,6 +525,8 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        
         let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
             let name = self.bikes[indexPath.row].name!
             let deleteMsg = "Are you sure you want \nto delete this bike? \n You cannot undo this action."
@@ -587,7 +591,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
         cell.mileageButton.tag = indexPath.row
         
         let iconImageView = cell.thumbNailImageView as UIImageView
-        iconImageView.layer.borderWidth = 1
+      //  iconImageView.layer.borderWidth = 1
         let newSwiftColor = UIColor(red: 200.0/255, green: 200.0/255, blue: 200.0/255, alpha: 0.8)
         iconImageView.layer.borderColor = newSwiftColor.cgColor
         //NEW CACHE STUFF
@@ -599,7 +603,7 @@ class AllBikesViewController: UIViewController, UITableViewDelegate, UITableView
                 })
             }
         } else {
-            iconImageView.image = #imageLiteral(resourceName: "bikeThumbNail")
+            iconImageView.image = #imageLiteral(resourceName: "thumb_placeholder_large")
         }
     }
     

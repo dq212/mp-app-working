@@ -15,10 +15,12 @@ class BikeCell: UITableViewCell {
     
     let thumbNailImageView: CustomImageView = {
         let iv = CustomImageView()
-        iv.backgroundColor = .white
+        //iv.backgroundColor = .white
         iv.contentMode = .scaleAspectFill
-        iv.layer.borderColor = UIColor.lightGray.cgColor
-        iv.layer.borderWidth = 1
+        iv.clipsToBounds = true
+       // iv.backgroundColor = .black
+       // iv.layer.borderColor = UIColor.lightGray.cgColor
+       // iv.layer.borderWidth = 0
         return iv
     }()
     
@@ -37,7 +39,7 @@ class BikeCell: UITableViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont(name: "Avenir-Medium", size: 17)
+        label.font = UIFont(name: "Avenir-Medium", size: 15)
         label.textColor = UIColor.black
         label.numberOfLines = 1
         label.adjustsFontSizeToFitWidth = false
@@ -56,11 +58,16 @@ class BikeCell: UITableViewCell {
         view.backgroundColor = UIColor.veryLightGray()
         return view
     }()
+    let divider3: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.veryLightGray()
+        return view
+    }()
     
     let makeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont(name: "Avenir", size: 13)
+        label.font = UIFont(name: "Avenir", size: 11)
         label.textColor = UIColor.darkGray
         label.numberOfLines = 0
         label.text = ""
@@ -70,7 +77,7 @@ class BikeCell: UITableViewCell {
     let modelLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont(name: "Avenir", size: 13)
+        label.font = UIFont(name: "Avenir", size: 11)
         label.textColor = UIColor.darkGray
         label.numberOfLines = 0
         label.text = ""
@@ -80,7 +87,7 @@ class BikeCell: UITableViewCell {
     let yearLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont(name: "Avenir", size: 10)
+        label.font = UIFont(name: "Avenir", size: 11)
         label.textColor = UIColor.darkGray
         label.numberOfLines = 0
         label.text = ""
@@ -115,32 +122,51 @@ class BikeCell: UITableViewCell {
         addSubview(thumbNailImageView)
         addSubview(divider)
         addSubview(unitsLabel)
-        self.accessoryView = acc
-       // addSubview(divider2)
-        thumbNailImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 10, paddingBottom: 10, paddingRight: 0, width: (frame.width / 3.5) , height: (frame.width / 3.5) )
+        addSubview(titleLabel)
+       // self.accessoryView = acc
+        addSubview(divider2)
+        addSubview(divider3)
+          titleLabel.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop:15, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width:frame.width, height:20)
+        thumbNailImageView.anchor(top: titleLabel.bottomAnchor , left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 15, paddingLeft: 0, paddingBottom: 10, paddingRight: 0, width: (frame.width) , height: (280) )
         setupLabels()
-        divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 1.5, paddingRight: 20, width: 0, height: 0.5)
         //divider2.anchor(top: divider.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.5)
-        thumbNailImageView.contentMode = .scaleAspectFill
-        thumbNailImageView.layer.cornerRadius = (self.frame.width/3.5) / 2
-        thumbNailImageView.clipsToBounds = true
+        //thumbNailImageView.contentMode = .scaleAspectFill
+        //thumbNailImageView.layer.cornerRadius = (self.frame.width/3.5) / 2
+       // thumbNailImageView.clipsToBounds = true
     }
     
     fileprivate func setupLabels() {
-        let stackView = UIStackView(arrangedSubviews: [ makeLabel, modelLabel, yearLabel, unitsLabel])
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        stackView.alignment = .top
-       // stackView.spacing = 1.0
-        //stackView.distribution = UIStackViewDistribution(rawValue: Int(1.0))!
-        addSubview(stackView)
+//        let stackView = UIStackView(arrangedSubviews: [ makeLabel, modelLabel, yearLabel, unitsLabel])
+//        stackView.distribution = .fillEqually
+//        stackView.axis = .vertical
+//        stackView.alignment = .top
+//       // stackView.spacing = 1.0
+//        //stackView.distribution = UIStackViewDistribution(rawValue: Int(1.0))!
+//        addSubview(stackView)
+        addSubview(makeLabel)
+        addSubview(modelLabel)
+        addSubview(yearLabel)
         addSubview(mileageButton)
-        addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor, left: thumbNailImageView.rightAnchor, bottom: nil, right: nil, paddingTop:26, paddingLeft: 14, paddingBottom: 0, paddingRight: 10, width:180, height: 0)
+     
+      
+        makeLabel.anchor(top: thumbNailImageView.bottomAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop:8, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width:0, height: 0)
 
-        stackView.anchor(top: titleLabel.bottomAnchor, left: thumbNailImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 3, paddingLeft: 14, paddingBottom: 0, paddingRight: 10, width:130, height: 70)
+        modelLabel.anchor(top: thumbNailImageView.bottomAnchor, left: makeLabel.rightAnchor, bottom: nil, right: nil, paddingTop:8, paddingLeft: 5, paddingBottom: 0, paddingRight: 10, width:0, height: 0)
+        yearLabel.anchor(top: thumbNailImageView.bottomAnchor, left: modelLabel.rightAnchor, bottom: nil, right: nil, paddingTop:8, paddingLeft: 5, paddingBottom: 0, paddingRight: 10, width:0, height: 0)
+        unitsLabel.anchor(top: makeLabel.bottomAnchor, left:leftAnchor, bottom: nil, right: nil, paddingTop:7, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width:0, height: 0)
+        
+        divider3.anchor(top:thumbNailImageView.topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom:-1 , paddingRight: 0, width: 0, height: 0.5)
+
+        divider2.anchor(top:thumbNailImageView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom:0 , paddingRight: 0, width: 0, height: 0.5)
+        
+        divider.anchor(top: unitsLabel.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
+
+            
+        
+
+//        stackView.anchor(top: titleLabel.bottomAnchor, left: thumbNailImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 3, paddingLeft: 14, paddingBottom: 0, paddingRight: 10, width:130, height: 70)
         //unitsLabel.anchor(top:stackView.bottomAnchor, left: stackView.leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 7, paddingRight: 20, width: 0, height: 20)
-        mileageButton.anchor(top: nil, left:nil, bottom: stackView.bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 3, paddingRight: 15, width: 80, height: 18)
+        mileageButton.anchor(top: unitsLabel.topAnchor, left:nil, bottom: nil, right: rightAnchor, paddingTop: -4, paddingLeft: 0, paddingBottom: 0, paddingRight: 15, width: 80, height: 18)
     }
     
     required init?(coder aDecoder: NSCoder) {

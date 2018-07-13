@@ -287,17 +287,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIScrollViewDe
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: {
             self.tcView.layer.transform = CATransform3DMakeScale(1, 1, 1)
         })
-            
         }
     }
     
     func adjustInsetForKeyboardShow(_ show: Bool, notification: Notification) {
         let userInfo = notification.userInfo ?? [:]
         let keyboardFrame = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
-        var kbHeight = (keyboardFrame.height) * (show ? 1 : -1)
+        var kbHeight = (keyboardFrame.height-60) * (show ? 1 : -1)
         
         if !show {
-            let returnHeight = -50
+            let returnHeight = 0
             kbHeight = CGFloat(returnHeight)
         }
         let point:CGPoint = CGPoint(x: 0.0, y: kbHeight)
